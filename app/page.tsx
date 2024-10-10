@@ -17,10 +17,9 @@ type FeedItem = {
   link: string;
 };
 
-// Updated FeedSource type to include url
 type FeedSource = {
   source: string;
-  url: string;  // Include this line to allow the URL
+  url: string;
   items: FeedItem[];
 };
 
@@ -33,25 +32,34 @@ const rssSources: FeedSource[] = [
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
+  
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
 
-  // Function to fetch RSS feeds and catch errors
+  // Function to fetch RSS feeds and handle errors
   const fetchRssFeeds = async () => {
     const parser = new Parser();
+
     const feeds: FeedSource[] = rssSources.map(source => ({ source: source.source, url: source.url, items: [] }));
 
     try {
       for (const { url, source } of rssSources) {
         const feed = await parser.parseURL(url);
-        const items = feed.items.slice(0, 3).map(item => ({
-          title: item.title,
-          link: item.link,
-        }));
+        const items = feed.items.slice(0, 3).map(item => {
+          // Ensure that title and link are defined before creating FeedItem
+          if (item.title && item.link) {
+            return {
+              title: item.title,
+              link: item.link,
+            };
+          }
+          return null; // Return null if either property is undefined
+        }).filter((item): item is FeedItem => item !== null); // Type guard to filter out nulls
+
         const feedIndex = feeds.findIndex(feed => feed.source === source);
         if (feedIndex > -1) {
-          feeds[feedIndex].items = items;
+          feeds[feedIndex].items = items; // Assign only valid FeedItem
         }
       }
       setRssFeedItems(feeds);
@@ -65,7 +73,6 @@ export default function Home() {
     fetchRssFeeds();
   }, []);
 
-  // Basic search handler (you can implement actual search logic)
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
