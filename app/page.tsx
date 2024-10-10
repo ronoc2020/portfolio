@@ -10,7 +10,7 @@ import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import Parser from 'rss-parser';
+import Parser from "rss-parser";
 
 type FeedItem = {
   title: string;
@@ -24,48 +24,52 @@ type FeedSource = {
 };
 
 const rssSources: FeedSource[] = [
-  { source: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews?format=xml', items: [] },
-  { source: 'Dark Reading', url: 'https://www.darkreading.com/rss/all.xml', items: [] },
-  { source: 'InfoSecurity Magazine', url: 'https://www.infosecurity-magazine.com/rss/news/', items: [] }
+  { source: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews?format=xml", items: [] },
+  { source: "Dark Reading", url: "https://www.darkreading.com/rss/all.xml", items: [] },
+  { source: "InfoSecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/", items: [] },
 ];
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
-  
+
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
 
-  // Function to fetch RSS feeds and handle errors
   const fetchRssFeeds = async () => {
     const parser = new Parser();
-
-    const feeds: FeedSource[] = rssSources.map(source => ({ source: source.source, url: source.url, items: [] }));
+    const feeds: FeedSource[] = rssSources.map((source) => ({
+      source: source.source,
+      url: source.url,
+      items: [],
+    }));
 
     try {
       for (const { url, source } of rssSources) {
         const feed = await parser.parseURL(url);
-        const items = feed.items.slice(0, 3).map(item => {
-          // Ensure that title and link are defined before creating FeedItem
-          if (item.title && item.link) {
-            return {
-              title: item.title,
-              link: item.link,
-            };
-          }
-          return null; // Return null if either property is undefined
-        }).filter((item): item is FeedItem => item !== null); // Type guard to filter out nulls
+        const items = feed.items
+          .slice(0, 3)
+          .map((item) => {
+            if (item.title && item.link) {
+              return {
+                title: item.title,
+                link: item.link,
+              };
+            }
+            return null;
+          })
+          .filter((item): item is FeedItem => item !== null);
 
-        const feedIndex = feeds.findIndex(feed => feed.source === source);
+        const feedIndex = feeds.findIndex((feed) => feed.source === source);
         if (feedIndex > -1) {
-          feeds[feedIndex].items = items; // Assign only valid FeedItem
+          feeds[feedIndex].items = items;
         }
       }
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
-      setRssFeedItems([]);  // Optionally clear the feed items on error
+      setRssFeedItems([]); // Optionally clear the feed items on error
     }
   };
 
