@@ -33,6 +33,11 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
 
+  // States for contact form
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
@@ -83,6 +88,16 @@ export default function Home() {
       console.log("Searching for:", searchQuery);
       // Implement actual search logic here if needed
     }
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle contact form submission logic here.
+    console.log({ name, email, message });
+    // Reset fields after submission for now
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (
@@ -145,7 +160,11 @@ export default function Home() {
         <section className="text-center mb-16" id="intro">
           <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
           <p className="text-xl mb-8">Ensuring stability and security for your IT infrastructure.</p>
-          <p className="text-2xl font-semibold">Tel: +48 695295641</p>
+          <a href="mailto:ronoc2020@gmail.com?subject=Report an Issue&body=Description of the issue...">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              Report Issue
+            </button>
+          </a>
         </section>
 
         <section id="services" className="mb-16">
@@ -208,7 +227,36 @@ export default function Home() {
           </form>
         </section>
 
-        <footer id="contact" className="text-center">
+        {/* Contact Form Section */}
+        <section id="contact" className="mb-16">
+          <h3 className="text-3xl font-bold mb-4 text-center">Contact Us</h3>
+          <form onSubmit={handleContactSubmit} className="space-y-4 max-w-md mx-auto">
+            <Input
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <textarea
+              placeholder="Your Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              className="border p-2 w-full h-32"
+            />
+            <Button type="submit">Send Message</Button>
+          </form>
+        </section>
+
+        <footer className="text-center">
           <div className="flex justify-center space-x-4 mb-4">
             <Link href="https://github.com/ronoc2020?tab=repositories" target="_blank" aria-label="GitHub">
               <Github className="h-6 w-6" />
