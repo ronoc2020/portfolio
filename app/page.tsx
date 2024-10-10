@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -22,14 +23,12 @@ type FeedSource = {
   items: FeedItem[];
 };
 
-// Define an interface for the GitHub Repository
-interface Repository {
+type Repository = {
   id: number;
   name: string;
   stargazers_count: number;
   html_url: string;
-  // Add other properties as needed
-}
+};
 
 // RSS Feed Sources
 const rssSources: FeedSource[] = [
@@ -42,7 +41,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
-  const [repositories, setRepositories] = useState<Repository[]>([]); // Update the type here
+  const [repositories, setRepositories] = useState<Repository[]>([]);
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
@@ -65,6 +64,7 @@ export default function Home() {
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
+      // Optionally set an error state to show to the user
     } finally {
       setLoading(false);
     }
@@ -76,13 +76,12 @@ export default function Home() {
       const response = await fetch("https://api.github.com/users/ronoc2020/repos");
       if (!response.ok) throw new Error("Failed to fetch repositories");
 
-      const data: Repository[] = await response.json(); // Type the fetched data
-      const sortedRepos = data
-        .sort((a: Repository, b: Repository) => b.stargazers_count - a.stargazers_count)
-        .slice(0, 5);
+      const data = await response.json();
+      const sortedRepos = data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 5);
       setRepositories(sortedRepos);
     } catch (error) {
       console.error("Error fetching repositories:", error);
+      // Optionally set an error state to show to the user
     }
   };
 
@@ -178,17 +177,72 @@ export default function Home() {
           <p className="text-lg mb-4">Educational Background & Technical Skills:</p>
           <ul className="list-disc list-inside mb-8">
             <li>Expertise in Azure and AWS.</li>
-            <li>Various certifications in IT and cybersecurity.</li>
+            <li>Degree in Computer Science.</li>
+            <li>Proficient in various security frameworks.</li>
           </ul>
-          <p className="text-lg mb-4">Soft Skills:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Teamwork</li>
-            <li>Adaptability</li>
-            <li>Multilingual: Polish, English, and German</li>
-          </ul>
-          <p className="text-lg mb-4">Personal Interests: Committed to professional development and community support.</p>
-          <p className="text-sm text-gray-500">GDPR Statement: Your personal data will be processed for recruitment purposes in compliance with GDPR regulations.</p>
         </section>
+        <section className="text-center mb-16" id="services">
+          <h2 className="text-4xl font-bold mb-4">Our Services</h2>
+          <p className="text-xl mb-4">We offer a range of services tailored to meet your needs:</p>
+          <ul className="list-disc list-inside mb-8">
+            <li>24/7 Network Monitoring</li>
+            <li>Incident Response Management</li>
+            <li>Cloud Infrastructure Management</li>
+            <li>Security Audits and Assessments</li>
+          </ul>
+        </section>
+        <section className="text-center mb-16" id="rss">
+          <h2 className="text-4xl font-bold mb-4">Latest Articles</h2>
+          <form onSubmit={handleSearch} className="mb-4">
+            <Input
+              type="text"
+              placeholder="Search articles..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full max-w-md mx-auto mb-4"
+            />
+            <Button type="submit" className="flex items-center">
+              <Search size={18} className="mr-2" />
+              Search
+            </Button>
+          </form>
+          {loading ? (
+            <p>Loading articles...</p>
+          ) : (
+            rssFeedItems.map(({ source, items }, index) => (
+              <div key={index} className="mb-8">
+                <h3 className="text-2xl font-bold mb-2">{source}</h3>
+                <ul className="list-disc list-inside">
+                  {items.map(({ title, link }, itemIndex) => (
+                    <li key={itemIndex}>
+                      <a href={link} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </section>
+        <section className="text-center mb-16" id="repositories">
+          <h2 className="text-4xl font-bold mb-4">Top GitHub Repositories</h2>
+          <ul className="list-disc list-inside mb-8">
+            {repositories.map((repo) => (
+              <li key={repo.id}>
+                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{repo.name}</a> - ⭐ {repo.stargazers_count}
+              </li>
+            ))}
+          </ul>
+        </section>
+        <footer className="text-center mb-4">
+          <p className="text-sm">© 2024 RO-NOC. All rights reserved.</p>
+          <div className="flex justify-center space-x-4">
+            <a href="https://github.com/ronoc2020" target="_blank" rel="noopener noreferrer"><Github size={24} className="hover:text-blue-300" /></a>
+            <a href="https://www.linkedin.com/in/ronan-orlowski/" target="_blank" rel="noopener noreferrer"><Linkedin size={24} className="hover:text-blue-300" /></a>
+            <a href="https://twitter.com/ronoc2020" target="_blank" rel="noopener noreferrer"><Twitter size={24} className="hover:text-blue-300" /></a>
+            <a href="https://www.youtube.com/channel/UCXwQH8iUVgVtOw7VtYy7mNw" target="_blank" rel="noopener noreferrer"><Youtube size={24} className="hover:text-blue-300" /></a>
+            <a href="https://www.twitch.tv/ronoc2020" target="_blank" rel="noopener noreferrer"><Twitch size={24} className="hover:text-blue-300" /></a>
+          </div>
+        </footer>
       </Container>
     </main>
   );
