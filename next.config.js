@@ -5,8 +5,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
-  // Remove the API route
-  rewrites: async () => [],
+  // Usunięcie rewrites
 };
 
 module.exports = nextConfig;
