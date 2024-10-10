@@ -6,11 +6,18 @@ type FeedItem = {
   link: string;
 };
 
+type ParsedFeed = {
+  items: Array<{
+    title?: string;
+    link?: string;
+  }>;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<FeedItem[]>
 ) {
-  const parser = new Parser();
+  const parser = new Parser<ParsedFeed>(); // Specify the type for Parser
   const feeds = [
     'https://www.darkreading.com/rss/all.xml',
     'https://feeds.feedburner.com/eset/blog'
@@ -20,10 +27,10 @@ export default async function handler(
     const feedPromises = feeds.map(feed => parser.parseURL(feed));
     const results = await Promise.all(feedPromises);
 
-    const allItems = results.flatMap(result => 
+    const allItems: FeedItem[] = results.flatMap(result => 
       result.items.map(item => ({
-        title: item.title || '',
-        link: item.link || ''
+        title: item.title || 'No title', // Fallback to 'No title' if undefined
+        link: item.link || '#', // Fallback to '#' if undefined
       }))
     );
 
