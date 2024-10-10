@@ -71,7 +71,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       
       - name: Export static site
-        run: ${{ steps.detect-package-manager.outputs.runner }} next export -o out
+        run: ${{ steps.detect-package-manager.outputs.runner }} next export
       
       - name: Prepare for deployment
         run: |
