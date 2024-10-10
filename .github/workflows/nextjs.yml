@@ -1,4 +1,3 @@
-# Sample workflow for building and deploying a Next.js site to GitHub Pages
 name: Deploy Next.js site to Pages
 
 on:
@@ -75,8 +74,20 @@ jobs:
       
       - name: Prepare for deployment
         run: |
-          cp -R ./public out/
-          cp -R ./next.config.js out/
+          echo "Preparing deployment files..."
+          # Check if public directory exists and copy it if it does
+          if [ -d "./public" ]; then
+            echo "Copying public directory to out..."
+            cp -R ./public out/
+          else
+            echo "No public directory found; skipping copy."
+          fi
+          # Copy next.config.js if required (adjust path if necessary)
+          if [ -f "./next.config.js" ]; then
+            cp -R ./next.config.js out/
+          else
+            echo "next.config.js not found; skipping copy."
+          fi
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
