@@ -75,8 +75,10 @@
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box; /* Added for better box model handling */
   }
   body {
     @apply bg-background text-foreground;
+    margin: 0; /* Added to eliminate default margin */
   }
 }
