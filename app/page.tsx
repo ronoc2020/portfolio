@@ -10,26 +10,56 @@ import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import Parser from 'rss-parser'; // Importing the RSS parser
 
 type FeedItem = {
   title: string;
   link: string;
 };
 
-const DUMMY_FEED_ITEMS: FeedItem[] = [
-  { title: "Latest Cybersecurity Threat: XYZ Ransomware", link: "#" },
-  { title: "New Vulnerability Found in Popular Software", link: "#" },
-  { title: "Best Practices for Securing Your Network", link: "#" },
-  { title: "Upcoming Cybersecurity Conference Announced", link: "#" },
-  { title: "How AI is Changing the Cybersecurity Landscape", link: "#" },
+// Grouped by source name
+type FeedSource = {
+  source: string;
+  items: FeedItem[];
+};
+
+const rssSources: FeedSource[] = [
+  { source: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews?format=xml' },
+  { source: 'Dark Reading', url: 'https://www.darkreading.com/rss/all.xml' },
+  { source: 'InfoSecurity Magazine', url: 'https://www.infosecurity-magazine.com/rss/news/' }
 ];
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [feedItems] = useState<FeedItem[]>(DUMMY_FEED_ITEMS);
-
+  const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
+  }, []);
+
+  const fetchRssFeeds = async () => {
+    const parser = new Parser();
+    const feeds: FeedSource[] = rssSources.map(source => ({ source: source.source, items: [] }));
+
+    try {
+      for (const { url, source } of rssSources) {
+        const feed = await parser.parseURL(url);
+        const items = feed.items.slice(0, 3).map(item => ({
+          title: item.title,
+          link: item.link,
+        }));
+        const feedIndex = feeds.findIndex(feed => feed.source === source);
+        if (feedIndex > -1) {
+          feeds[feedIndex].items = items;
+        }
+      }
+      setRssFeedItems(feeds);
+    } catch (error) {
+      console.error("Error fetching RSS feeds:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRssFeeds();
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -43,38 +73,21 @@ export default function Home() {
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: {
-            color: {
-              value: "transparent",
-            },
-          },
+          background: { color: { value: "transparent" } },
           fpsLimit: 120,
           interactivity: {
             events: {
-              onClick: {
-                enable: true,
-                mode: "push",
-              },
-              onHover: {
-                enable: true,
-                mode: "repulse",
-              },
+              onClick: { enable: true, mode: "push" },
+              onHover: { enable: true, mode: "repulse" },
               resize: true,
             },
             modes: {
-              push: {
-                quantity: 4,
-              },
-              repulse: {
-                distance: 200,
-                duration: 0.4,
-              },
+              push: { quantity: 4 },
+              repulse: { distance: 200, duration: 0.4 },
             },
           },
           particles: {
-            color: {
-              value: "#ffffff",
-            },
+            color: { value: "#ffffff" },
             links: {
               color: "#ffffff",
               distance: 150,
@@ -85,29 +98,13 @@ export default function Home() {
             move: {
               direction: "none",
               enable: true,
-              outModes: {
-                default: "bounce",
-              },
-              random: false,
+              outModes: { default: "bounce" },
               speed: 6,
-              straight: false,
             },
-            number: {
-              density: {
-                enable: true,
-                area: 800,
-              },
-              value: 80,
-            },
-            opacity: {
-              value: 0.5,
-            },
-            shape: {
-              type: "circle",
-            },
-            size: {
-              value: { min: 1, max: 5 },
-            },
+            number: { density: { enable: true, area: 800 }, value: 80 },
+            opacity: { value: 0.5 },
+            shape: { type: "circle" },
+            size: { value: { min: 1, max: 5 } },
           },
           detectRetina: true,
         }}
@@ -120,20 +117,20 @@ export default function Home() {
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
           <div className="flex space-x-4">
-            <Link href="#" className="hover-text">Home</Link>
-            <Link href="#" className="hover-text">About</Link>
-            <Link href="#" className="hover-text">Services</Link>
-            <Link href="#" className="hover-text">Contact</Link>
+            <Link href="#services" className="hover-text">Services</Link>
+            <Link href="#news" className="hover-text">Cybersecurity News</Link>
+            <Link href="#search" className="hover-text">Search</Link>
+            <Link href="#contact" className="hover-text">Contact</Link>
           </div>
         </nav>
 
-        <section className="text-center mb-16">
+        <section className="text-center mb-16" id="intro">
           <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
           <p className="text-xl mb-8">Ensuring stability and security for your IT infrastructure.</p>
           <p className="text-2xl font-semibold">Tel: +48 695295641</p>
         </section>
 
-        <section className="mb-16">
+        <section id="services" className="mb-16">
           <h3 className="text-3xl font-bold mb-4">Our Services</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="hover-card">
@@ -155,20 +152,29 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mb-16">
+        <section id="news" className="mb-16">
           <h3 className="text-3xl font-bold mb-4">Latest Cybersecurity News</h3>
-          <ul className="space-y-4">
-            {feedItems.map((item, index) => (
-              <li key={index} className="hover-card">
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
-                  {item.title}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {rssFeedItems.length ? (
+            rssFeedItems.map((feed, feedIndex) => (
+              <div key={feedIndex} className="mb-8">
+                <h4 className="text-2xl font-bold mb-2">{feed.source}</h4>
+                <ul className="space-y-4">
+                  {feed.items.map((item, itemIndex) => (
+                    <li key={itemIndex} className="hover-card">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                        {item.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          ) : (
+            <div className="text-gray-400">Loading news...</div>
+          )}
         </section>
 
-        <section className="mb-16">
+        <section id="search" className="mb-16">
           <h3 className="text-3xl font-bold mb-4">Search Our Repos</h3>
           <form onSubmit={handleSearch} className="flex space-x-4">
             <Input
@@ -184,9 +190,9 @@ export default function Home() {
           </form>
         </section>
 
-        <footer className="text-center">
+        <footer id="contact" className="text-center">
           <div className="flex justify-center space-x-4 mb-4">
-            <Link href="#" aria-label="GitHub">
+            <Link href="https://github.com/ronoc2020?tab=repositories" target="_blank" aria-label="GitHub">
               <Github className="h-6 w-6" />
             </Link>
             <Link href="#" aria-label="LinkedIn">
@@ -202,7 +208,7 @@ export default function Home() {
               <Twitch className="h-6 w-6" />
             </Link>
           </div>
-          <p>&copy; 2040 RO-NOC. All rights reserved.</p>
+          <p>© 2040 RO-NOC. All rights reserved.</p>
         </footer>
       </Container>
 
