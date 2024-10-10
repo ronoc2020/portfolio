@@ -10,23 +10,24 @@ import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import Parser from 'rss-parser'; // Importing the RSS parser
+import Parser from 'rss-parser';
 
 type FeedItem = {
   title: string;
   link: string;
 };
 
-// Grouped by source name
+// Updated FeedSource type to include url
 type FeedSource = {
   source: string;
+  url: string;  // Include this line to allow the URL
   items: FeedItem[];
 };
 
 const rssSources: FeedSource[] = [
-  { source: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews?format=xml' },
-  { source: 'Dark Reading', url: 'https://www.darkreading.com/rss/all.xml' },
-  { source: 'InfoSecurity Magazine', url: 'https://www.infosecurity-magazine.com/rss/news/' }
+  { source: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews?format=xml', items: [] },
+  { source: 'Dark Reading', url: 'https://www.darkreading.com/rss/all.xml', items: [] },
+  { source: 'InfoSecurity Magazine', url: 'https://www.infosecurity-magazine.com/rss/news/', items: [] }
 ];
 
 export default function Home() {
@@ -36,9 +37,10 @@ export default function Home() {
     await loadFull(engine);
   }, []);
 
+  // Function to fetch RSS feeds and catch errors
   const fetchRssFeeds = async () => {
     const parser = new Parser();
-    const feeds: FeedSource[] = rssSources.map(source => ({ source: source.source, items: [] }));
+    const feeds: FeedSource[] = rssSources.map(source => ({ source: source.source, url: source.url, items: [] }));
 
     try {
       for (const { url, source } of rssSources) {
@@ -55,6 +57,7 @@ export default function Home() {
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
+      setRssFeedItems([]);  // Optionally clear the feed items on error
     }
   };
 
@@ -62,9 +65,13 @@ export default function Home() {
     fetchRssFeeds();
   }, []);
 
+  // Basic search handler (you can implement actual search logic)
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
+    if (searchQuery) {
+      console.log("Searching for:", searchQuery);
+      // Implement actual search logic here if needed
+    }
   };
 
   return (
