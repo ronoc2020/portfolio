@@ -1,4 +1,3 @@
-"use client";
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,15 @@ type FeedSource = {
   items: FeedItem[];
 };
 
+// Define an interface for the GitHub Repository
+interface Repository {
+  id: number;
+  name: string;
+  stargazers_count: number;
+  html_url: string;
+  // Add other properties as needed
+}
+
 // RSS Feed Sources
 const rssSources: FeedSource[] = [
   { source: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews?format=xml", items: [] },
@@ -34,7 +42,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
-  const [repositories, setRepositories] = useState<any[]>([]); // Define a more specific type if available
+  const [repositories, setRepositories] = useState<Repository[]>([]); // Update the type here
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
@@ -68,8 +76,10 @@ export default function Home() {
       const response = await fetch("https://api.github.com/users/ronoc2020/repos");
       if (!response.ok) throw new Error("Failed to fetch repositories");
 
-      const data = await response.json();
-      const sortedRepos = data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 5);
+      const data: Repository[] = await response.json(); // Type the fetched data
+      const sortedRepos = data
+        .sort((a: Repository, b: Repository) => b.stargazers_count - a.stargazers_count)
+        .slice(0, 5);
       setRepositories(sortedRepos);
     } catch (error) {
       console.error("Error fetching repositories:", error);
