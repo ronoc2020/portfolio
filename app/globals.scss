@@ -115,6 +115,51 @@ a:hover {
     align-items: center;
   }
 
+  /* Global Variables */
+$scarlet-red: #d10707;
+$hover-scarlet: darken($scarlet-red, 10%);
+$input-text-color: black; // Ensure input text color remains consistent
+
+/* Global Button Styles */
+.report-issue-btn,
+.submit-btn {
+  background-color: $scarlet-red;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: $hover-scarlet;
+  }
+}
+
+/* Input Field Styling */
+input,
+textarea {
+  color: $input-text-color !important;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: $scarlet-red;
+  }
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
   nav a {
     margin: 5px 0;
   }
