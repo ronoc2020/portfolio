@@ -3,7 +3,6 @@
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Youtube, Twitter, Twitch, Search } from "lucide-react";
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import type { Engine } from "tsparticles-engine";
@@ -12,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Parser from "rss-parser";
 
+// Feed Item and Source Types
 type FeedItem = {
   title: string;
   link: string;
@@ -23,6 +23,7 @@ type FeedSource = {
   items: FeedItem[];
 };
 
+// RSS Feeds
 const rssSources: FeedSource[] = [
   { source: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews?format=xml", items: [] },
   { source: "Dark Reading", url: "https://www.darkreading.com/rss/all.xml", items: [] },
@@ -32,16 +33,17 @@ const rssSources: FeedSource[] = [
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // States for contact form
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  // State for contact form
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formError, setFormError] = useState("");
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
 
+  // Fetch RSS Feeds
   const fetchRssFeeds = async () => {
     const parser = new Parser();
     const feeds: FeedSource[] = rssSources.map((source) => ({
@@ -54,16 +56,8 @@ export default function Home() {
       for (const { url, source } of rssSources) {
         const feed = await parser.parseURL(url);
         const items = feed.items
-          .slice(0, 3) // Ensure only 3 headlines are fetched
-          .map((item) => {
-            if (item.title && item.link) {
-              return {
-                title: item.title,
-                link: item.link,
-              };
-            }
-            return null;
-          })
+          .slice(0, 3)
+          .map((item) => (item.title && item.link ? { title: item.title, link: item.link } : null))
           .filter((item): item is FeedItem => item !== null);
 
         const feedIndex = feeds.findIndex((feed) => feed.source === source);
@@ -74,7 +68,9 @@ export default function Home() {
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
-      setRssFeedItems([]); // Optionally clear the feed items on error
+      setFormError("Failed to load news feeds.");
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -82,6 +78,7 @@ export default function Home() {
     fetchRssFeeds();
   }, []);
 
+  // Handle Search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
@@ -89,22 +86,42 @@ export default function Home() {
     }
   };
 
+  // Handle Contact Form Change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Contact Form Submission
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, email, message });
-    setName("");
-    setEmail("");
-    setMessage("");
+    const { name, email, message } = formData;
+
+    if (!name || !email || !message) {
+      setFormError("All fields are required.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
+    if (!emailPattern.test(email)) {
+      setFormError("Please enter a valid email address.");
+      return;
+    }
+
+    console.log("Contact Form Data:", formData);
+    // Simulate submission
+    setFormData({ name: "", email: "", message: "" });
+    setFormError("");
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black text-white">
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
           background: { color: { value: "transparent" } },
-          fpsLimit: 120,
+          fpsLimit: 60,
           interactivity: {
             events: {
               onClick: { enable: true, mode: "push" },
@@ -126,12 +143,12 @@ export default function Home() {
               width: 1,
             },
             move: {
-              direction: "none",
               enable: true,
+              speed: 4,
+              direction: "none",
               outModes: { default: "bounce" },
-              speed: 6,
             },
-            number: { density: { enable: true, area: 800 }, value: 80 },
+            number: { density: { enable: true, area: 800 }, value: 60 },
             opacity: { value: 0.5 },
             shape: { type: "circle" },
             size: { value: { min: 1, max: 5 } },
@@ -140,6 +157,7 @@ export default function Home() {
         }}
       />
 
+      {/* Header Section */}
       <Container>
         <nav className="flex justify-between items-center w-full mb-16">
           <div className="flex items-center">
@@ -147,53 +165,122 @@ export default function Home() {
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
           <div className="flex space-x-4">
-            <Link href="#services" className="hover-text">Services</Link>
-            <Link href="#news" className="hover-text">Cybersecurity News</Link>
-            <Link href="#search" className="hover-text">Search</Link>
-            <Link href="#contact" className="hover-text">Contact</Link>
+            <Link href="#services" className="hover:text-gray-300">Services</Link>
+            <Link href="#news" className="hover:text-gray-300">Cybersecurity News</Link>
+            <Link href="#search" className="hover:text-gray-300">Search</Link>
+            <Link href="#contact" className="hover:text-gray-300">Contact</Link>
           </div>
         </nav>
 
+        {/* Intro Section */}
         <section className="text-center mb-16" id="intro">
           <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
           <p className="text-xl mb-8">Ensuring stability and security for your IT infrastructure.</p>
           <a href="mailto:ronoc2020@gmail.com?subject=Report an Issue&body=Description of the issue...">
-            <button className="report-issue-btn">Report Issue</button>
+            <Button className="bg-red-600 text-white hover:bg-red-800">Report Issue</Button>
           </a>
         </section>
 
-        {/* New Profile Section */}
-        <section className="text-center mb-16" id="profile">
-          <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
-          <p className="text-xl mb-4">Well-organized professional with over 15 years of IT experience, particularly in security and cloud management.</p>
-          <p className="text-lg mb-4">Strengths include:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Infrastructure Management</li>
-            <li>Cybersecurity</li>
-            <li>Project Leadership</li>
+        {/* About Me Section */}
+        <section id="about" className="text-center mb-16">
+          <h3 className="text-4xl font-bold mb-4">About Me</h3>
+          <p className="text-xl mb-4">
+            I am well-organized and showcase over 15 years of IT experience, particularly in security and cloud management.
+            My strengths lie in infrastructure, cybersecurity, and project leadership. Key highlights include my roles at
+            LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced security measures
+            and managed cloud infrastructures.
+          </p>
+          <ul className="list-disc list-inside mb-4">
+            <li>Educational Background</li>
+            <li>Technical Skills: Azure, AWS</li>
+            <li>Certifications</li>
+            <li>Soft Skills: Teamwork, Adaptability</li>
+            <li>Multilingual: Polish, English, German</li>
+            <li>Personal Interests</li>
           </ul>
-          <p className="text-lg mb-4">Key Highlights:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Senior Engineer at LTI MindTree Ltd, enhancing security measures.</li>
-            <li>Support Engineer at Intellias, managing cloud infrastructures.</li>
-          </ul>
-          <p className="text-lg mb-4">Educational Background & Technical Skills:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Expertise in Azure and AWS.</li>
-            <li>Various certifications in IT and cybersecurity.</li>
-          </ul>
-          <p className="text-lg mb-4">Soft Skills:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Teamwork</li>
-            <li>Adaptability</li>
-            <li>Multilingual: Polish, English, and German</li>
-          </ul>
-          <p className="text-lg mb-4">Personal Interests: Committed to professional development and community support.</p>
-          <p className="text-sm text-gray-500">GDPR Statement: Your personal data will be processed for recruitment purposes in compliance with GDPR regulations.</p>
+          <p className="text-xl">
+            I am committed to professional development and community support.
+          </p>
         </section>
 
-        {/* Other sections remain unchanged... */}
+        {/* RSS News Section */}
+        <section id="news" className="mb-16">
+          <h3 className="text-4xl font-bold mb-6">Cybersecurity News</h3>
+          {loading ? (
+            <p>Loading news feeds...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {rssFeedItems.map((feed) => (
+                <div key={feed.source} className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="text-2xl mb-4">{feed.source}</h4>
+                  <ul>
+                    {feed.items.map((item, index) => (
+                      <li key={index} className="mb-2">
+                        <a href={item.link} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
+                          {item.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Search Section */}
+        <section id="search" className="text-center mb-16">
+          <h3 className="text-4xl font-bold mb-4">Search</h3>
+          <form onSubmit={handleSearch} className="flex justify-center mb-4">
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="mr-2"
+            />
+            <Button type="submit">Search</Button>
+          </form>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="text-center mb-16">
+          <h3 className="text-4xl font-bold mb-4">Contact Me</h3>
+          <form onSubmit={handleContactSubmit} className="flex flex-col items-center">
+            {formError && <p className="text-red-500">{formError}</p>}
+            <Input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="mb-2"
+            />
+            <Input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="mb-2"
+            />
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              value={formData.message}
+              onChange={handleChange}
+              className="mb-2 p-2 w-80 h-32"
+            />
+            <Button type="submit">Send Message</Button>
+          </form>
+        </section>
       </Container>
+
+      <footer className="py-6 bg-gray-900 w-full">
+        <Container>
+          <p className="text-center">© 2024 RO-NOC. All rights reserved.</p>
+        </Container>
+      </footer>
     </main>
   );
 }
