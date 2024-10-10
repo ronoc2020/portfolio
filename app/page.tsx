@@ -34,10 +34,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
-
-  // State for contact form
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [formError, setFormError] = useState("");
+  const [repositories, setRepositories] = useState([]); // State to hold repositories
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
@@ -68,7 +65,6 @@ export default function Home() {
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
-      setFormError("Failed to load news feeds.");
     } finally {
       setLoading(false); // Set loading to false after fetching
     }
@@ -78,40 +74,29 @@ export default function Home() {
     fetchRssFeeds();
   }, []);
 
+  // Fetch repositories from GitHub
+  const fetchRepositories = async () => {
+    try {
+      const response = await fetch("https://api.github.com/users/ronoc2020/repos");
+      const data = await response.json();
+      const sortedRepos = data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 5);
+      setRepositories(sortedRepos);
+    } catch (error) {
+      console.error("Error fetching repositories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRepositories();
+  }, []);
+
   // Handle Search
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
       console.log("Searching for:", searchQuery);
+      // You could also add your search logic here
     }
-  };
-
-  // Handle Contact Form Change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Contact Form Submission
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { name, email, message } = formData;
-
-    if (!name || !email || !message) {
-      setFormError("All fields are required.");
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
-    if (!emailPattern.test(email)) {
-      setFormError("Please enter a valid email address.");
-      return;
-    }
-
-    console.log("Contact Form Data:", formData);
-    // Simulate submission
-    setFormData({ name: "", email: "", message: "" });
-    setFormError("");
   };
 
   return (
@@ -168,7 +153,7 @@ export default function Home() {
             <Link href="#services" className="hover:text-gray-300">Services</Link>
             <Link href="#news" className="hover:text-gray-300">Cybersecurity News</Link>
             <Link href="#search" className="hover:text-gray-300">Search</Link>
-            <Link href="#contact" className="hover:text-gray-300">Contact</Link>
+            <Link href="#repositories" className="hover:text-gray-300">Repositories</Link>
           </div>
         </nav>
 
@@ -230,57 +215,38 @@ export default function Home() {
 
         {/* Search Section */}
         <section id="search" className="text-center mb-16">
-          <h3 className="text-4xl font-bold mb-4">Search</h3>
+          <h3 className="text-4xl font-bold mb-4">Search Repositories</h3>
           <form onSubmit={handleSearch} className="flex justify-center mb-4">
             <Input
               type="text"
-              placeholder="Search..."
+              placeholder="Search GitHub repositories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="mr-2"
+              className="w-64 text-black"
             />
-            <Button type="submit">Search</Button>
+            <Button type="submit" className="ml-2">Search</Button>
           </form>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="text-center mb-16">
-          <h3 className="text-4xl font-bold mb-4">Contact Me</h3>
-          <form onSubmit={handleContactSubmit} className="flex flex-col items-center">
-            {formError && <p className="text-red-500">{formError}</p>}
-            <Input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              className="mb-2"
-            />
-            <Input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="mb-2"
-            />
-            <textarea
-              name="message"
-              placeholder="Your Message"
-              value={formData.message}
-              onChange={handleChange}
-              className="mb-2 p-2 w-80 h-32"
-            />
-            <Button type="submit">Send Message</Button>
-          </form>
+        {/* Most Used Repositories Section */}
+        <section id="repositories" className="mb-16">
+          <h3 className="text-4xl font-bold mb-6">Most Used Repositories</h3>
+          <ul className="space-y-4">
+            {repositories.map((repo) => (
+              <li key={repo.id} className="p-4 bg-gray-800 rounded-lg">
+                <h4 className="text-2xl">{repo.name}</h4>
+                <p>⭐ Stars: {repo.stargazers_count}</p>
+                <Link href={repo.html_url} target="_blank" className="text-blue-500 underline">View Repository</Link>
+              </li>
+            ))}
+          </ul>
         </section>
+
+        {/* Footer Section */}
+        <footer className="text-center py-8 border-t border-gray-600">
+          <p>&copy; 2024 RO-NOC Solutions. All rights reserved.</p>
+        </footer>
       </Container>
-
-      <footer className="py-6 bg-gray-900 w-full">
-        <Container>
-          <p className="text-center">© 2024 RO-NOC. All rights reserved.</p>
-        </Container>
-      </footer>
     </main>
   );
 }
