@@ -37,11 +37,49 @@ const rssSources: FeedSource[] = [
   { source: "InfoSecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/", items: [] },
 ];
 
+const particleOptions = {
+  background: { color: { value: "transparent" } },
+  fpsLimit: 60,
+  interactivity: {
+    events: {
+      onClick: { enable: true, mode: "push" },
+      onHover: { enable: true, mode: "repulse" },
+      resize: true,
+    },
+    modes: {
+      push: { quantity: 4 },
+      repulse: { distance: 200, duration: 0.4 },
+    },
+  },
+  particles: {
+    color: { value: "#ffffff" },
+    links: {
+      color: "#ffffff",
+      distance: 150,
+      enable: true,
+      opacity: 0.5,
+      width: 1,
+    },
+    move: {
+      direction: "none",
+      enable: true,
+      outModes: { default: "bounce" },
+      speed: 6,
+    },
+    number: { density: { enable: true, area: 800 }, value: 80 },
+    opacity: { value: 0.5 },
+    shape: { type: "circle" },
+    size: { value: { min: 1, max: 5 } },
+  },
+  detectRetina: true,
+};
+
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
@@ -50,21 +88,25 @@ export default function Home() {
   // Fetch RSS Feeds
   const fetchRssFeeds = async () => {
     const parser = new Parser();
+    setError(null); // Reset error state
 
     try {
-      const feeds = await Promise.all(rssSources.map(async ({ source, url }) => {
-        const feed = await parser.parseURL(url);
-        const items = feed.items.slice(0, 3)
-          .map(({ title, link }) => (title && link ? { title, link } : null))
-          .filter((item): item is FeedItem => item !== null);
-        
-        return { source, url, items };
-      }));
+      const feeds = await Promise.all(
+        rssSources.map(async ({ source, url }) => {
+          const feed = await parser.parseURL(url);
+          const items = feed.items
+            .slice(0, 3)
+            .map(({ title, link }) => (title && link ? { title, link } : null))
+            .filter((item): item is FeedItem => item !== null);
+
+          return { source, url, items };
+        })
+      );
 
       setRssFeedItems(feeds);
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
-      // Optionally set an error state to show to the user
+      setError("Failed to fetch RSS feeds. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -72,16 +114,20 @@ export default function Home() {
 
   // Fetch GitHub Repositories
   const fetchRepositories = async () => {
+    setError(null); // Reset error state
+
     try {
       const response = await fetch("https://api.github.com/users/ronoc2020/repos");
       if (!response.ok) throw new Error("Failed to fetch repositories");
 
       const data = await response.json();
-      const sortedRepos = data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 5);
+      const sortedRepos = data
+        .sort((a, b) => b.stargazers_count - a.stargazers_count)
+        .slice(0, 5);
       setRepositories(sortedRepos);
     } catch (error) {
       console.error("Error fetching repositories:", error);
-      // Optionally set an error state to show to the user
+      setError("Failed to fetch GitHub repositories. Please try again later.");
     }
   };
 
@@ -95,52 +141,13 @@ export default function Home() {
     e.preventDefault();
     if (searchQuery) {
       console.log("Searching for:", searchQuery);
-      // Implement search logic here
+      // Implement search logic here by filtering rssFeedItems based on searchQuery
     }
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black text-white">
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        options={{
-          background: { color: { value: "transparent" } },
-          fpsLimit: 60,
-          interactivity: {
-            events: {
-              onClick: { enable: true, mode: "push" },
-              onHover: { enable: true, mode: "repulse" },
-              resize: true,
-            },
-            modes: {
-              push: { quantity: 4 },
-              repulse: { distance: 200, duration: 0.4 },
-            },
-          },
-          particles: {
-            color: { value: "#ffffff" },
-            links: {
-              color: "#ffffff",
-              distance: 150,
-              enable: true,
-              opacity: 0.5,
-              width: 1,
-            },
-            move: {
-              direction: "none",
-              enable: true,
-              outModes: { default: "bounce" },
-              speed: 6,
-            },
-            number: { density: { enable: true, area: 800 }, value: 80 },
-            opacity: { value: 0.5 },
-            shape: { type: "circle" },
-            size: { value: { min: 1, max: 5 } },
-          },
-          detectRetina: true,
-        }}
-      />
+      <Particles id="tsparticles" init={particlesInit} options={particleOptions} />
       <Container>
         <nav className="flex justify-between items-center w-full mb-16">
           <div className="flex items-center">
@@ -149,7 +156,9 @@ export default function Home() {
           </div>
           <div className="flex space-x-4">
             {["services", "news", "search", "contact"].map((item) => (
-              <Link key={item} href={`#${item}`} className="hover-text">{item.charAt(0).toUpperCase() + item.slice(1)}</Link>
+              <Link key={item} href={`#${item}`} className="hover-text">
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </Link>
             ))}
           </div>
         </nav>
@@ -183,39 +192,49 @@ export default function Home() {
         </section>
         <section className="text-center mb-16" id="services">
           <h2 className="text-4xl font-bold mb-4">Our Services</h2>
-          <p className="text-xl mb-4">We offer a range of services tailored to meet your needs:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>24/7 Network Monitoring</li>
-            <li>Incident Response Management</li>
-            <li>Cloud Infrastructure Management</li>
-            <li>Security Audits and Assessments</li>
-          </ul>
+          <div className="flex flex-wrap justify-center gap-8">
+            <div className="service-card">
+              <h3 className="text-xl font-bold">Cloud Management</h3>
+              <p>Comprehensive cloud solutions for your business.</p>
+            </div>
+            <div className="service-card">
+              <h3 className="text-xl font-bold">Security Audits</h3>
+              <p>Thorough audits to ensure compliance and security.</p>
+            </div>
+            <div className="service-card">
+              <h3 className="text-xl font-bold">Network Monitoring</h3>
+              <p>Continuous monitoring to prevent downtime.</p>
+            </div>
+          </div>
         </section>
-        <section className="text-center mb-16" id="rss">
-          <h2 className="text-4xl font-bold mb-4">Latest Articles</h2>
+        <section className="text-center mb-16" id="news">
+          <h2 className="text-4xl font-bold mb-4">Latest News</h2>
           <form onSubmit={handleSearch} className="mb-4">
             <Input
               type="text"
-              placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-md mx-auto mb-4"
+              placeholder="Search news..."
+              className="mb-2"
             />
-            <Button type="submit" className="flex items-center">
-              <Search size={18} className="mr-2" />
-              Search
+            <Button type="submit" className="ml-2">
+              <Search />
             </Button>
           </form>
           {loading ? (
-            <p>Loading articles...</p>
+            <p>Loading news...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
           ) : (
-            rssFeedItems.map(({ source, items }, index) => (
-              <div key={index} className="mb-8">
-                <h3 className="text-2xl font-bold mb-2">{source}</h3>
-                <ul className="list-disc list-inside">
-                  {items.map(({ title, link }, itemIndex) => (
-                    <li key={itemIndex}>
-                      <a href={link} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{title}</a>
+            rssFeedItems.map(({ source, items }) => (
+              <div key={source}>
+                <h3 className="text-2xl font-bold mt-4">{source}</h3>
+                <ul className="list-disc list-inside mb-4">
+                  {items.map((item) => (
+                    <li key={item.link}>
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        {item.title}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -223,24 +242,42 @@ export default function Home() {
             ))
           )}
         </section>
-        <section className="text-center mb-16" id="repositories">
-          <h2 className="text-4xl font-bold mb-4">Top GitHub Repositories</h2>
-          <ul className="list-disc list-inside mb-8">
-            {repositories.map((repo) => (
-              <li key={repo.id}>
-                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{repo.name}</a> - ⭐ {repo.stargazers_count}
-              </li>
-            ))}
-          </ul>
+        <section className="text-center mb-16" id="github">
+          <h2 className="text-4xl font-bold mb-4">GitHub Repositories</h2>
+          {error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-8">
+              {repositories.map((repo) => (
+                <div key={repo.id} className="repo-card">
+                  <h3 className="text-xl font-bold">{repo.name}</h3>
+                  <p>⭐ {repo.stargazers_count} Stars</p>
+                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                    View Repository
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
-        <footer className="text-center mb-4">
-          <p className="text-sm">© 2024 RO-NOC. All rights reserved.</p>
+        <footer className="text-center mt-16">
+          <p>Connect with us on social media:</p>
           <div className="flex justify-center space-x-4">
-            <a href="https://github.com/ronoc2020" target="_blank" rel="noopener noreferrer"><Github size={24} className="hover:text-blue-300" /></a>
-            <a href="https://www.linkedin.com/in/ronan-orlowski/" target="_blank" rel="noopener noreferrer"><Linkedin size={24} className="hover:text-blue-300" /></a>
-            <a href="https://twitter.com/ronoc2020" target="_blank" rel="noopener noreferrer"><Twitter size={24} className="hover:text-blue-300" /></a>
-            <a href="https://www.youtube.com/channel/UCXwQH8iUVgVtOw7VtYy7mNw" target="_blank" rel="noopener noreferrer"><Youtube size={24} className="hover:text-blue-300" /></a>
-            <a href="https://www.twitch.tv/ronoc2020" target="_blank" rel="noopener noreferrer"><Twitch size={24} className="hover:text-blue-300" /></a>
+            <Link href="https://github.com/ronoc2020">
+              <Github className="hover:scale-110 transition-transform" />
+            </Link>
+            <Link href="https://www.linkedin.com/in/ron-orlowski/">
+              <Linkedin className="hover:scale-110 transition-transform" />
+            </Link>
+            <Link href="https://twitter.com/ronoc2020">
+              <Twitter className="hover:scale-110 transition-transform" />
+            </Link>
+            <Link href="https://www.twitch.tv/ronoc2020">
+              <Twitch className="hover:scale-110 transition-transform" />
+            </Link>
+            <Link href="https://www.youtube.com/c/RonOrlowski">
+              <Youtube className="hover:scale-110 transition-transform" />
+            </Link>
           </div>
         </footer>
       </Container>
