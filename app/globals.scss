@@ -7,19 +7,33 @@
 :root {
   --primary-color: #8a2be2;
   --secondary-color: #4b0082;
+  --accent-color: #a855f7;
   --background-color: #1a0033;
   --text-color: #ffffff;
+  --card-bg-color: rgba(138, 43, 226, 0.1);
+  --hover-card-shadow: rgba(138, 43, 226, 0.3);
 }
 
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
-  margin: 0; /* Ensure no margin around the body */
+  margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+  color: var(--primary-color);
 }
 
 .glow-text {
@@ -31,8 +45,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hover-text:hover {
-  color: #a855f7;
-  text-shadow: 0 0 10px #a855f7;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px var(--accent-color);
 }
 
 .hover-section {
@@ -41,18 +55,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .hover-section:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(138, 43, 226, 0.2);
+  box-shadow: 0 10px 20px var(--hover-card-shadow);
 }
 
 .hover-card {
-  @apply bg-opacity-10 rounded-lg p-5; /* Use Tailwind utilities for consistency */
-  background-color: rgba(138, 43, 226, 0.1);
+  @apply bg-opacity-10 rounded-lg p-5;
+  background-color: var(--card-bg-color);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hover-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+  box-shadow: 0 10px 20px var(--hover-card-shadow);
 }
 
 .lightsaber {
