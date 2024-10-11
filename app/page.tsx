@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Parser from "rss-parser";
+import React from 'react';
 
 // Type Definitions
 type FeedItem = {
@@ -38,7 +39,38 @@ const rssSources: FeedSource[] = [
   { source: "InfoSecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/", items: [] },
 ];
 
-export default function Home() {
+// Service Card Component
+const ServiceCard = ({ title }) => {
+  return (
+    <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow">
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="text-gray-600">Detailed description about {title}.</p>
+      <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
+        Learn More
+      </button>
+    </div>
+  );
+};
+
+// Services Section Component
+const ServicesSection = () => {
+  const services = [
+    'IT Consultancy and Solutions',
+    'Infrastructure Management',
+    'Cybersecurity',
+    'Project Leadership',
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {services.map((service, index) => (
+        <ServiceCard key={index} title={service} />
+      ))}
+    </div>
+  );
+};
+
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -179,126 +211,121 @@ export default function Home() {
             {/* Profile Section */}
             <section className="text-center mb-16" id="profile">
               <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
-              <p className="text-xl mb-4">Well-organized professional with over 15 years of IT experience, particularly in security and cloud management.</p>
+              <p className="text-xl mb-4">If you seek a skilled professional capable of seamlessly aligning and integrating diverse projects into your existing infrastructure, please feel free to reach out.</p>
               <p className="text-lg mb-4">Strengths include:</p>
-              <ul className="list-disc list-inside mb-8">
-                <li>Infrastructure Management</li>
-                <li>Cybersecurity</li>
+              <ul className="list-disc list-inside mb-4">
+                <li>IT Infrastructure Management</li>
+                <li>Cybersecurity Solutions</li>
+                <li>Cloud Services</li>
                 <li>Project Leadership</li>
               </ul>
+            </section>
+
+            {/* Services Section */}
+            <section id="services" className="mb-16">
+              <h2 className="text-4xl font-bold mb-4">Our Services</h2>
+              <ServicesSection />
             </section>
 
             {/* About Me Section */}
             <section id="about" className="text-center mb-16">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
               <p className="text-xl mb-4">
-                I am well-organized and showcase over 15 years of IT experience, particularly in security and cloud management.
+                I am well-organized and showcase over 15 years of IT experience, particularly in support, security, and cloud management.
                 My strengths lie in infrastructure, cybersecurity, and project leadership. Key highlights include my roles at
-                LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced security measures
-                and managed cloud infrastructures.
+                LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced project efficiency
+                and reliability.
               </p>
             </section>
 
-            <section className="text-center mb-16">
-              <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
-              <p className="text-xl mb-8">Ensuring stability and security for your IT infrastructure.</p>
-              <div className="flex justify-center space-x-4 mb-4">
-                <Button variant="primary">Schedule a Consultation</Button>
-                <Button variant="secondary">Learn More</Button>
-              </div>
-            </section>
-
-            {/* Cybersecurity News Section */}
+            {/* News Section */}
             <section id="news" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">Latest Cybersecurity News</h2>
-              {rssFeedItems.map((feed, index) => (
-                <div key={index} className="mb-6">
-                  <h3 className="text-xl font-bold">{feed.source}</h3>
-                  <ul>
-                    {feed.items.map((item, i) => (
-                      <li key={i}>
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                          {item.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+              <h3 className="text-4xl font-bold mb-4">Cybersecurity News</h3>
+              {rssFeedItems.map((feed) => (
+                <div key={feed.source} className="mb-4">
+                  <h4 className="text-2xl font-semibold mb-2">{feed.source}</h4>
+                  {feed.items.length > 0 ? (
+                    <ul className="list-disc list-inside">
+                      {feed.items.map((item) => (
+                        <li key={item.link} className="mb-2">
+                          <a href={item.link} className="text-blue-500 hover:underline">{item.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No news available.</p>
+                  )}
                 </div>
               ))}
             </section>
 
-            {/* Search Repositories Section */}
+            {/* Search Section */}
             <section id="search" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">Search Repositories</h2>
-              <form onSubmit={handleSearch} className="flex space-x-2">
+              <h3 className="text-4xl font-bold mb-4">Search Repositories</h3>
+              <form onSubmit={handleSearch} className="flex items-center mb-4">
                 <Input
                   type="text"
-                  placeholder="Search Repositories..."
+                  placeholder="Search repositories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-grow"
+                  className="mr-2"
                 />
-                <Button type="submit" className="flex-none">
-                  <Search />
+                <Button type="submit" className="bg-blue-500 text-white">
+                  <Search size={20} />
                 </Button>
               </form>
-              <div className="mt-4">
+              <ul className="list-disc list-inside">
                 {filteredRepositories.map((repo) => (
-                  <div key={repo.id} className="mb-2">
-                    <h4 className="text-lg font-semibold">
-                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                        {repo.name}
-                      </a>
-                    </h4>
-                    <p>{repo.stargazers_count} ⭐️</p>
-                  </div>
+                  <li key={repo.id}>
+                    <a href={repo.html_url} className="text-blue-500 hover:underline">
+                      {repo.name} - ⭐{repo.stargazers_count}
+                    </a>
+                  </li>
                 ))}
-              </div>
-            </section>
-
-            {/* Contact Section */}
-            <section id="contact" className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4">Contact Me</h2>
-              <p className="text-xl mb-4">Feel free to reach out via:</p>
-              <div className="flex justify-center space-x-4">
-                <a href="https://github.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Github size={32} className="hover:text-gray-300" />
-                </a>
-                <a href="https://www.linkedin.com/in/ron-orlowski" target="_blank" rel="noopener noreferrer">
-                  <Linkedin size={32} className="hover:text-gray-300" />
-                </a>
-                <a href="https://www.youtube.com/@ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Youtube size={32} className="hover:text-gray-300" />
-                </a>
-                <a href="https://twitter.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitter size={32} className="hover:text-gray-300" />
-                </a>
-                <a href="https://www.twitch.tv/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitch size={32} className="hover:text-gray-300" />
-                </a>
-              </div>
+              </ul>
             </section>
 
             {/* Repositories Section */}
             <section id="repositories" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">My Repositories</h2>
-              {repositories.length > 0 ? (
-                <ul>
-                  {repositories.map((repo) => (
-                    <li key={repo.id}>
-                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                        {repo.name}
-                      </a> - {repo.stargazers_count} stars
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div>No repositories available.</div>
-              )}
+              <h3 className="text-4xl font-bold mb-4">My GitHub Repositories</h3>
+              <ul className="list-disc list-inside">
+                {repositories.map((repo) => (
+                  <li key={repo.id}>
+                    <a href={repo.html_url} className="text-blue-500 hover:underline">
+                      {repo.name} - ⭐{repo.stargazers_count}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {/* Contact Section */}
+            <section id="contact" className="text-center mb-16">
+              <h3 className="text-4xl font-bold mb-4">Contact Me</h3>
+              <p className="text-lg mb-4">Feel free to reach out via social media:</p>
+              <div className="flex justify-center space-x-4">
+                <a href="https://github.com/ronoc2020?tab=repositories" target="_blank" rel="noopener noreferrer">
+                  <Github size={40} />
+                </a>
+                <a href="https://www.linkedin.com/in/ro-noc-182714306/" target="_blank" rel="noopener noreferrer">
+                  <Linkedin size={40} />
+                </a>
+                <a href="https://www.youtube.com/@RO-NOC" target="_blank" rel="noopener noreferrer">
+                  <Youtube size={40} />
+                </a>
+                <a href="https://x.com/noc_ro" target="_blank" rel="noopener noreferrer">
+                  <Twitter size={40} />
+                </a>
+                <a href="https://www.twitch.tv/ro_noc2020" target="_blank" rel="noopener noreferrer">
+                  <Twitch size={40} />
+                </a>
+              </div>
             </section>
           </>
         )}
       </Container>
     </main>
   );
-}
+};
+
+export default Home;
