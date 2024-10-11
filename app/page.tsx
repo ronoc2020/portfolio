@@ -20,12 +20,8 @@ type Repository = {
 };
 
 // Service Card Component
-type ServiceCardProps = {
-  title: string;
-};
-
-const ServiceCard: React.FC<ServiceCardProps> = ({ title }) => (
-  <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow">
+const ServiceCard = ({ title }: { title: string }) => (
+  <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
     <h3 className="text-lg font-semibold">{title}</h3>
     <p className="text-gray-600">Detailed description about {title}.</p>
     <Link href="#" className="mt-4 bg-blue-500 text-white rounded px-4 py-2">Learn More</Link>
@@ -57,7 +53,7 @@ const Home = () => {
   const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const apiToken = process.env.NEXT_PUBLIC_GITHUB_API_TOKEN || ""; // Ensure your token is set in .env
+  const apiToken = process.env.NEXT_PUBLIC_GITHUB_API_TOKEN || ""; 
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
@@ -149,16 +145,43 @@ const Home = () => {
           detectRetina: true,
         }}
       />
+
       <Container>
+        {/* Hero Section */}
+        <section className="mb-16 flex flex-col items-center text-center">
+          <h1 className="text-5xl font-bold mb-4 glow-text">Welcome to RO-NOC</h1>
+          <p className="text-lg mb-6">Your trusted partner in IT solutions and consulting.</p>
+          <Link href="#services" className="bg-blue-500 text-white rounded px-4 py-2">Explore Services</Link>
+        </section>
+
+        {/* Navigation */}
         <nav className="flex justify-between items-center w-full mb-16 z-10">
           <div className="flex items-center">
             <Image src="https://imgur.com/XzVeiIb" alt="RO-NOC Logo" width={90} height={90} />
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 relative">
             <Link href="#" className="hover:text-gray-300">Home</Link>
             <Link href="#about" className="hover:text-gray-300">About</Link>
-            <Link href="#services" className="hover:text-gray-300">Services</Link>
+            <div className="relative group">
+              <Link href="#services" className="hover:text-gray-300">Services</Link>
+              <div className="hidden group-hover:block absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                <ul className="py-2">
+                  <li>
+                    <Link href="https://sites.google.com/view/ro-noc/doradztwo-it" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">IT Consultancy</Link>
+                  </li>
+                  <li>
+                    <Link href="https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Cloud Solutions</Link>
+                  </li>
+                  <li>
+                    <Link href="https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Infrastructure Management</Link>
+                  </li>
+                  <li>
+                    <Link href="https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Cybersecurity</Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <Link href="#search" className="hover:text-gray-300">Search</Link>
             <Link href="https://sites.google.com/view/ro-noc/kontakt" className="hover:text-gray-300">Contact</Link>
             <Link href="#repositories" className="hover:text-gray-300">Repositories</Link>
@@ -263,6 +286,19 @@ const Home = () => {
           </>
         )}
       </Container>
+
+      {/* Footer Section */}
+      <footer className="w-full bg-gray-800 text-white p-4">
+        <div className="text-center">
+          <h3 className="text-xl mb-2">Stay Updated</h3>
+          <div className="flex justify-center space-x-4">
+            <Link href="https://feeds.feedburner.com/TheHackersNews?format=xml" target="_blank" className="hover:text-gray-400">The Hacker News RSS</Link>
+            <Link href="https://www.darkreading.com/rss/all.xml" target="_blank" className="hover:text-gray-400">Dark Reading RSS</Link>
+            <Link href="https://www.infosecurity-magazine.com/rss/news/" target="_blank" className="hover:text-gray-400">Infosecurity Magazine RSS</Link>
+            <Link href="https://github.com/ronoc2020?tab=repositories" target="_blank" className="hover:text-gray-400">GitHub Repositories</Link>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 };
