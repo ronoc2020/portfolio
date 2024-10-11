@@ -299,5 +299,73 @@ const Page = () => {
     </div>
   );
 };
+// components/Footer.js
+const Footer = () => {
+  return (
+    <footer className="bg-gray-800 text-white py-4">
+      <div className="container mx-auto text-center">
+        <h2 className="text-lg font-bold">Subscribe to RSS Feeds</h2>
+        <div className="flex justify-center space-x-4 mb-4">
+          <a href="https://feeds.feedburner.com/TheHackersNews?format=xml" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            The Hackers News
+          </a>
+          <a href="https://www.darkreading.com/rss/all.xml" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Dark Reading
+          </a>
+          <a href="https://www.infosecurity-magazine.com/rss/news/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            InfoSecurity Magazine
+          </a>
+          <a href="https://github.com/ronoc2020?tab=repositories" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            GitHub Repositories
+          </a>
+        </div>
+        <h2 className="text-lg font-bold">Other Links</h2>
+        <div className="flex flex-wrap justify-center space-x-4">
+          <a href="https://sites.google.com/view/ro-noc/strona-g%C5%82%C3%B3wna" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Home
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            About Me
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/doradztwo-it" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            IT Consulting
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Cloud Solutions
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Network Monitoring
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Cybersecurity
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/faq" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            FAQ
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/kontakt" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Contact
+          </a>
+          <a href="https://sites.google.com/view/ro-noc/kontakt/polityka-prywatno%C5%9Bci" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Privacy Policy
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+};
+import Footer from '../components/Footer'; // Adjust the path as necessary
+
+const Page = () => {
+  return (
+    <div>
+      {/* Other sections/components */}
+      <Footer />
+    </div>
+  );
+};
+
+export default Page;
+
+export default Footer;
 
 export default Page;
