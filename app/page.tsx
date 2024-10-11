@@ -8,7 +8,6 @@ import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 // Type Definitions
@@ -31,10 +30,10 @@ const ServiceCard = ({ title }: { title: string }) => (
 // Services Section Component
 const ServicesSection = () => {
   const services = [
-    "IT Consultancy and Solutions",
-    "Infrastructure Management",
+    "IT Solutions and Services",
+    "Cloud Solutions Implementation",
+    "Network / Infrastructure Monitoring and Management",
     "Cybersecurity",
-    "Project Leadership",
   ];
 
   return (
@@ -48,9 +47,7 @@ const ServicesSection = () => {
 
 // Main Component
 const Home = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const apiToken = process.env.NEXT_PUBLIC_GITHUB_API_TOKEN || ""; 
@@ -77,7 +74,6 @@ const Home = () => {
 
       const data: Repository[] = await response.json();
       setRepositories(data);
-      setFilteredRepositories(data);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       setError(message);
@@ -85,15 +81,6 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Handle Search for repositories
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const filtered = repositories.filter(repo =>
-      repo.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredRepositories(filtered);
   };
 
   // Effect for fetching repositories on mount
@@ -140,8 +127,6 @@ const Home = () => {
             opacity: { value: 0.5 },
             shape: { type: ["circle", "square", "triangle"] },
             size: { value: { min: 1, max: 10 } },
-            rotate: { random: true, value: 0 },
-            tilt: { random: true, value: 0 },
           },
           detectRetina: true,
         }}
@@ -163,15 +148,15 @@ const Home = () => {
           </div>
           <div className="flex space-x-4 relative">
             <Link href="#" className="hover:text-gray-300">Home</Link>
-            <Link href="#about" className="hover:text-gray-300">About</Link>
+            <Link href="#about" className="hover:text-gray-300">About Me</Link>
             <div className="relative group">
               <Link href="#services" className="hover:text-gray-300">Services</Link>
               <div className="hidden group-hover:block absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
                 <ul className="py-2">
                   {[ // Dynamic Dropdown
-                    { name: "IT Consultancy", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
-                    { name: "Cloud Solutions", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
-                    { name: "Infrastructure Management", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
+                    { name: "IT Solutions and Services", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
+                    { name: "Cloud Solutions Implementation", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
+                    { name: "Network / Infrastructure Monitoring and Management", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
                     { name: "Cybersecurity", url: "https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" }
                   ].map(({ name, url }) => (
                     <li key={name}>
@@ -181,7 +166,6 @@ const Home = () => {
                 </ul>
               </div>
             </div>
-            <Link href="#search" className="hover:text-gray-300">Search</Link>
             <Link href="https://sites.google.com/view/ro-noc/kontakt" className="hover:text-gray-300">Contact</Link>
             <Link href="#repositories" className="hover:text-gray-300">Repositories</Link>
             <Link href="https://sites.google.com/view/ro-noc/faq" className="hover:text-gray-300">FAQ</Link>
@@ -198,7 +182,7 @@ const Home = () => {
           <>
             {/* Profile Section */}
             <section className="text-center mb-16" id="profile">
-              <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
+              <h2 className="text-4xl font-bold mb-4">Roman Orlowski - Network Operation Center</h2>
               <p className="text-xl mb-4">If you seek a skilled professional capable of seamlessly aligning diverse projects, please reach out.</p>
             </section>
 
@@ -211,47 +195,55 @@ const Home = () => {
             {/* About Me Section */}
             <section id="about" className="text-center mb-16">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
-              <p className="text-xl mb-4">I am well-organized with over 15 years of IT experience, focusing on infrastructure, cybersecurity, and project leadership.</p>
+              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity. I specialize in creating and implementing modern cloud solutions and securing IT infrastructure. Thanks to my knowledge and experience, I support companies in optimizing IT processes while ensuring the highest level of data security.</p>
               <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
                 <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank">Read more about me</Link>
               </button>
             </section>
 
-            {/* Repository Search Section */}
-            <section id="search" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">Search Repositories</h2>
-              <form onSubmit={handleSearch} className="flex mb-4">
-                <Input
-                  type="text"
-                  placeholder="Search by repository name..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="mr-2"
-                />
-                <Button type="submit">Search</Button>
-              </form>
+            {/* Repositories List Section */}
+            <section id="repositories" className="mb-16">
+              <h2 className="text-4xl font-bold mb-4">My GitHub Repositories</h2>
 
-              {/* Repositories List */}
-              {filteredRepositories.length === 0 && searchQuery && (
-                <div>No repositories found for "{searchQuery}".</div>
+              {repositories.length === 0 ? (
+                <div>No repositories available.</div>
+              ) : (
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {repositories.map(repo => (
+                    <li key={repo.id} className="mb-2">
+                      <div className="border rounded-lg shadow-lg p-6 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
+                        <h3 className="text-lg font-semibold">{repo.name}</h3>
+                        <p className="text-gray-600">⭐ {repo.stargazers_count}</p>
+                        <div className="tooltip mt-4">
+                          <Link
+                            href={repo.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors block text-center"
+                          >
+                            View Repository
+                          </Link>
+                          <span className="tooltip-text">Go to repository on GitHub</span>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               )}
-              <ul className="mb-5">
-                {filteredRepositories.map(repo => (
-                  <li key={repo.id} className="mb-2">
-                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                      {repo.name} - ⭐ {repo.stargazers_count}
-                    </a>
-                  </li>
-                ))}
-              </ul>
             </section>
 
             {/* Contact Section */}
             <section id="contact" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">Contact Me</h2>
-              <p className="text-lg mb-4">Feel free to reach out for any queries or collaborations.</p>
+              <h2 className="text-4xl font-bold mb-4">Report an Incident</h2>
+              <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
+                <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem?authuser=0" target="_blank">Report</Link>
+              </button>
+
+              {/* Button to Report Issue */}
+              <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem" className="mt-4 bg-red-500 text-white rounded px-4 py-2">Report Issue</Link>
+
               <div className="flex justify-center space-x-4 mb-6">
-                {[ // Icon Links
+                {[
                   { href: "https://github.com/ronoc2020", icon: <Github className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
                   { href: "https://www.linkedin.com/in/ro-noc-182714306/", icon: <Linkedin className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
                   { href: "https://www.youtube.com/@RO-NOC", icon: <Youtube className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
@@ -263,25 +255,6 @@ const Home = () => {
                   </Link>
                 ))}
               </div>
-
-              <h3 className="text-2xl font-bold mb-2">Useful Links</h3>
-              <ul className="list-disc list-inside mb-4 text-lg">
-                {[ // Useful links
-                  { name: "Home", url: "https://sites.google.com/view/ro-noc/strona-główna" },
-                  { name: "About Me", url: "https://sites.google.com/view/ro-noc/o-mnie" },
-                  { name: "IT Consulting", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
-                  { name: "Cloud Solutions Implementation", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
-                  { name: "Network Infrastructure Monitoring", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
-                  { name: "Cybersecurity", url: "https://sites.google.com/view/ro-noc/cyberbezpieczeństwo" },
-                  { name: "FAQ", url: "https://sites.google.com/view/ro-noc/faq" },
-                  { name: "Contact", url: "https://sites.google.com/view/ro-noc/kontakt" },
-                  { name: "Privacy Policy", url: "https://sites.google.com/view/ro-noc/kontakt/polityka-prywatności" },
-                ].map(({ name, url }) => (
-                  <li key={name}>
-                    <Link href={url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">{name}</Link>
-                  </li>
-                ))}
-              </ul>
             </section>
           </>
         )}
@@ -292,7 +265,7 @@ const Home = () => {
         <div className="text-center">
           <h3 className="text-xl mb-2">Stay Updated</h3>
           <div className="flex justify-center space-x-4">
-            {[ // RSS Links
+            {[
               { name: "The Hacker News RSS", url: "https://feeds.feedburner.com/TheHackersNews?format=xml" },
               { name: "Dark Reading RSS", url: "https://www.darkreading.com/rss/all.xml" },
               { name: "Infosecurity Magazine RSS", url: "https://www.infosecurity-magazine.com/rss/news/" },
@@ -303,6 +276,7 @@ const Home = () => {
           </div>
         </div>
       </footer>
+
     </main>
   );
 };
