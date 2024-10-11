@@ -1,3 +1,5 @@
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 :root {
@@ -13,16 +15,24 @@
 }
 
 body {
-  /* Body styling goes here */
+  /* Body styling can go here */
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
+/* Hover Card Styling */
 .hover-card {
-  @apply rounded-lg p-5;
+  border-radius: 8px; /* Replacing @apply for rounded-lg */
+  padding: 20px; /* Instead of p-5 (20px) */
   background-color: var(--card-bg-color);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 10px var(--hover-card-shadow);
+  }
 }
 
-/* Global Variables */
+/* Global Variables - SCSS syntax */
 $scarlet-red: #d10707;
 $hover-scarlet: darken($scarlet-red, 10%);
 $input-text-color: black; // Ensure input text color remains consistent
