@@ -202,169 +202,107 @@ const Page = () => {
         init={particlesInit}
         options={{
           background: {
-            color: {
-              value: "#000",
+            color: { value: "#000000" },
+          },
+          fpsLimit: 120,
+          interactivity: {
+            events: {
+              onClick: {
+                enable: true,
+                mode: "push",
+              },
+              onHover: {
+                enable: true,
+                mode: "repulse",
+              },
+              resize: true,
+            },
+            modes: {
+              push: {
+                quantity: 4,
+              },
+              repulse: {
+                distance: 200,
+                duration: 2,
+              },
             },
           },
           particles: {
-            number: {
-              value: 100,
+            color: {
+              value: "#ffffff",
             },
-            size: {
-              value: { min: 1, max: 5 },
+            links: {
+              color: "#ffffff",
+              distance: 150,
+              enable: true,
+              opacity: 0.5,
+              width: 1,
+            },
+            collisions: {
+              enable: true,
             },
             move: {
-              enable: true,
-              speed: 1,
               direction: "none",
+              enable: true,
+              outModes: {
+                default: "bounce",
+              },
               random: false,
+              speed: 6,
               straight: false,
-              out_mode: "out",
-              bounce: false,
             },
-            shape: {
-              type: "circle",
-              stroke: {
-                width: 0,
-                color: "#000",
+            number: {
+              density: {
+                enable: true,
+                area: 800,
               },
-              polygon: {
-                nb_sides: 5,
-              },
-              image: {
-                src: "img/github.svg",
-                width: 100,
-                height: 100,
-              },
+              value: 80,
             },
             opacity: {
               value: 0.5,
-              random: false,
-              anim: {
-                enable: false,
-                speed: 1,
-                opacity_min: 0.1,
-                sync: false,
-              },
             },
-            interactivity: {
-              events: {
-                onhover: {
-                  enable: true,
-                  mode: "repulse",
-                },
-                onclick: {
-                  enable: true,
-                  mode: "push",
-                },
-                resize: true,
-              },
-              modes: {
-                grab: {
-                  distance: 400,
-                  line_linked: {
-                    opacity: 1,
-                  },
-                },
-                bubble: {
-                  distance: 400,
-                  size: 40,
-                  duration: 2,
-                  opacity: 8,
-                  speed: 3,
-                },
-                repulse: {
-                  distance: 200,
-                  duration: 2,
-                },
-                push: {
-                  particles_nb: 4,
-                },
-                remove: {
-                  particles_nb: 2,
-                },
-              },
+            shape: {
+              type: "circle",
+            },
+            size: {
+              random: true,
+              value: 5,
             },
           },
+          detectRetina: true,
         }}
       />
-      <Container>
-        <h1 className="text-5xl font-bold mb-8 text-white neon-glow">Welcome to My Portfolio</h1>
+      <Container className="relative z-10">
+        <h1 className="text-5xl font-bold mb-4 text-white neon-glow">Welcome to My Portfolio</h1>
+        <p className="text-gray-300 mb-8">I am an IT professional with a passion for technology and a commitment to excellence. Explore my work and connect with me.</p>
         <ResumeCard />
         <ServicesSection />
         <TestimonialsSection />
         <ContactForm />
         <SkillsSection />
       </Container>
+      <footer className="bg-black bg-opacity-70 p-4 text-center text-white">
+        <p>© {new Date().getFullYear()} Your Name. All rights reserved.</p>
+        <div className="flex justify-center space-x-4 mt-2">
+          <Link href="https://github.com" target="_blank" aria-label="GitHub">
+            <Github className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
+          </Link>
+          <Link href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+            <Linkedin className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
+          </Link>
+          <Link href="https://youtube.com" target="_blank" aria-label="YouTube">
+            <Youtube className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
+          </Link>
+          <Link href="https://twitter.com" target="_blank" aria-label="Twitter">
+            <Twitter className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
+          </Link>
+          <Link href="https://twitch.tv" target="_blank" aria-label="Twitch">
+            <Twitch className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 };
-// components/Footer.js
-const Footer = () => {
-  return (
-    <footer className="bg-gray-800 text-white py-4">
-      <div className="container mx-auto text-center">
-        <h2 className="text-lg font-bold">Subscribe to RSS Feeds</h2>
-        <div className="flex justify-center space-x-4 mb-4">
-          <a href="https://feeds.feedburner.com/TheHackersNews?format=xml" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            The Hackers News
-          </a>
-          <a href="https://www.darkreading.com/rss/all.xml" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Dark Reading
-          </a>
-          <a href="https://www.infosecurity-magazine.com/rss/news/" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            InfoSecurity Magazine
-          </a>
-          <a href="https://github.com/ronoc2020?tab=repositories" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            GitHub Repositories
-          </a>
-        </div>
-        <h2 className="text-lg font-bold">Other Links</h2>
-        <div className="flex flex-wrap justify-center space-x-4">
-          <a href="https://sites.google.com/view/ro-noc/strona-g%C5%82%C3%B3wna" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Home
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            About Me
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/doradztwo-it" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            IT Consulting
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Cloud Solutions
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Network Monitoring
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Cybersecurity
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/faq" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            FAQ
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/kontakt" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Contact
-          </a>
-          <a href="https://sites.google.com/view/ro-noc/kontakt/polityka-prywatno%C5%9Bci" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Privacy Policy
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
-};
-import Footer from '../components/Footer'; // Adjust the path as necessary
-
-const Page = () => {
-  return (
-    <div>
-      {/* Other sections/components */}
-      <Footer />
-    </div>
-  );
-};
-
-
-export default Footer;
 
 export default Page;
