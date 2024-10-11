@@ -11,7 +11,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Parser from "rss-parser";
-import React from 'react';
+import React from "react";
 
 // Type Definitions
 type FeedItem = {
@@ -40,7 +40,7 @@ const rssSources: FeedSource[] = [
 ];
 
 // Service Card Component
-const ServiceCard = ({ title }) => {
+const ServiceCard: React.FC<{ title: string }> = ({ title }) => {
   return (
     <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow">
       <h3 className="text-lg font-semibold">{title}</h3>
@@ -53,12 +53,12 @@ const ServiceCard = ({ title }) => {
 };
 
 // Services Section Component
-const ServicesSection = () => {
+const ServicesSection: React.FC = () => {
   const services = [
-    'IT Consultancy and Solutions',
-    'Infrastructure Management',
-    'Cybersecurity',
-    'Project Leadership',
+    "IT Consultancy and Solutions",
+    "Infrastructure Management",
+    "Cybersecurity",
+    "Project Leadership",
   ];
 
   return (
@@ -70,7 +70,7 @@ const ServicesSection = () => {
   );
 };
 
-const Home = () => {
+const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,8 +84,8 @@ const Home = () => {
 
   const fetchData = async () => {
     const parser = new Parser();
-    setError(null); // Reset error state
-    setLoading(true); // Set loading state
+    setError(null);
+    setLoading(true);
 
     try {
       // Fetch RSS feeds
@@ -108,7 +108,7 @@ const Home = () => {
 
       const data: Repository[] = await response.json();
       setRepositories(data);
-      setFilteredRepositories(data); // Set filtered repositories initially to all repositories
+      setFilteredRepositories(data);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError("Failed to fetch data. Please try again later.");
@@ -171,14 +171,6 @@ const Home = () => {
               type: ["circle", "square", "triangle"],
             },
             size: { value: { min: 1, max: 10 } },
-            rotate: {
-              random: true,
-              value: 0,
-            },
-            tilt: {
-              random: true,
-              value: 0,
-            },
           },
           detectRetina: true,
         }}
@@ -211,7 +203,9 @@ const Home = () => {
             {/* Profile Section */}
             <section className="text-center mb-16" id="profile">
               <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
-              <p className="text-xl mb-4">If you seek a skilled professional capable of seamlessly aligning and integrating diverse projects into your existing infrastructure, please feel free to reach out.</p>
+              <p className="text-xl mb-4">
+                If you seek a skilled professional capable of seamlessly aligning and integrating diverse projects into your existing infrastructure, please feel free to reach out.
+              </p>
               <p className="text-lg mb-4">Strengths include:</p>
               <ul className="list-disc list-inside mb-4">
                 <li>IT Infrastructure Management</li>
@@ -231,10 +225,7 @@ const Home = () => {
             <section id="about" className="text-center mb-16">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
               <p className="text-xl mb-4">
-                I am well-organized and showcase over 15 years of IT experience, particularly in support, security, and cloud management.
-                My strengths lie in infrastructure, cybersecurity, and project leadership. Key highlights include my roles at
-                LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced project efficiency
-                and reliability.
+                I am well-organized and showcase over 15 years of IT experience, particularly in support, security, and cloud management. My strengths lie in infrastructure, cybersecurity, and project leadership. Key highlights include my roles at LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced project efficiency and reliability.
               </p>
             </section>
 
@@ -243,82 +234,60 @@ const Home = () => {
               <h3 className="text-4xl font-bold mb-4">Cybersecurity News</h3>
               {rssFeedItems.map((feed) => (
                 <div key={feed.source} className="mb-4">
-                  <h4 className="text-2xl font-semibold mb-2">{feed.source}</h4>
-                  {feed.items.length > 0 ? (
-                    <ul className="list-disc list-inside">
-                      {feed.items.map((item) => (
-                        <li key={item.link} className="mb-2">
-                          <a href={item.link} className="text-blue-500 hover:underline">{item.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No news available.</p>
-                  )}
+                  <h4 className="text-2xl font-semibold">{feed.source}</h4>
+                  <ul>
+                    {feed.items.map((item) => (
+                      <li key={item.link} className="text-blue-500 hover:underline">
+                        <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </section>
 
-            {/* Search Section */}
+            {/* Repository Search Section */}
             <section id="search" className="mb-16">
               <h3 className="text-4xl font-bold mb-4">Search Repositories</h3>
-              <form onSubmit={handleSearch} className="flex items-center mb-4">
+              <form onSubmit={handleSearch} className="flex mb-4">
                 <Input
                   type="text"
                   placeholder="Search repositories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="mr-2"
+                  className="border p-2 rounded w-full"
                 />
-                <Button type="submit" className="bg-blue-500 text-white">
-                  <Search size={20} />
+                <Button type="submit" className="bg-blue-500 text-white rounded px-4">
+                  <Search size={16} />
                 </Button>
               </form>
-              <ul className="list-disc list-inside">
-                {filteredRepositories.map((repo) => (
-                  <li key={repo.id}>
-                    <a href={repo.html_url} className="text-blue-500 hover:underline">
-                      {repo.name} - ⭐{repo.stargazers_count}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {/* Repositories Section */}
-            <section id="repositories" className="mb-16">
-              <h3 className="text-4xl font-bold mb-4">My GitHub Repositories</h3>
-              <ul className="list-disc list-inside">
-                {repositories.map((repo) => (
-                  <li key={repo.id}>
-                    <a href={repo.html_url} className="text-blue-500 hover:underline">
-                      {repo.name} - ⭐{repo.stargazers_count}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <div>
+                {filteredRepositories.length > 0 ? (
+                  <ul>
+                    {filteredRepositories.map((repo) => (
+                      <li key={repo.id} className="mb-2">
+                        <a href={repo.html_url} className="text-blue-500 hover:underline">
+                          {repo.name} - ⭐ {repo.stargazers_count}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-gray-500">No repositories found.</div>
+                )}
+              </div>
             </section>
 
             {/* Contact Section */}
-            <section id="contact" className="text-center mb-16">
+            <section id="contact" className="mb-16 text-center">
               <h3 className="text-4xl font-bold mb-4">Contact Me</h3>
-              <p className="text-lg mb-4">Feel free to reach out via social media:</p>
+              <p className="text-xl mb-4">Feel free to reach out via my social media:</p>
               <div className="flex justify-center space-x-4">
-                <a href="https://github.com/ronoc2020?tab=repositories" target="_blank" rel="noopener noreferrer">
-                  <Github size={40} />
-                </a>
-                <a href="https://www.linkedin.com/in/ro-noc-182714306/" target="_blank" rel="noopener noreferrer">
-                  <Linkedin size={40} />
-                </a>
-                <a href="https://www.youtube.com/@RO-NOC" target="_blank" rel="noopener noreferrer">
-                  <Youtube size={40} />
-                </a>
-                <a href="https://x.com/noc_ro" target="_blank" rel="noopener noreferrer">
-                  <Twitter size={40} />
-                </a>
-                <a href="https://www.twitch.tv/ro_noc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitch size={40} />
-                </a>
+                <Link href="#" className="text-blue-500"><Github /></Link>
+                <Link href="#" className="text-blue-500"><Linkedin /></Link>
+                <Link href="#" className="text-blue-500"><Youtube /></Link>
+                <Link href="#" className="text-blue-500"><Twitter /></Link>
+                <Link href="#" className="text-blue-500"><Twitch /></Link>
               </div>
             </section>
           </>
