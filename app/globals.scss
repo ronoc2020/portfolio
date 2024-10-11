@@ -41,19 +41,24 @@ $hover-scarlet: darken($scarlet-red, 10%);
 $input-text-color: black;
 
 // Global Button Styles
-.report-issue-btn,
-.submit-btn {
+.btn {
   background-color: $scarlet-red;
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
+  
   &:hover {
     background-color: $hover-scarlet;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px $scarlet-red; // Adds focus outline for accessibility
+    ring: 2px solid $scarlet-red; // Additional focus effect
   }
 }
 
@@ -98,6 +103,7 @@ nav a {
   }
 }
 
+// Fade-in Animation
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -112,3 +118,21 @@ nav a {
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+// Neon Card Styling
+<style jsx global>{`
+  .neon-card {
+    background: rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .neon-card:hover {
+    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+  }
+  
+  .neon-glow {
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+  }
+`}
