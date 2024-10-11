@@ -5,13 +5,15 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #8a2be2;
+  --primary-color: #8a2be2; /* Updated primary color for better visibility */
   --secondary-color: #4b0082;
-  --accent-color: #a855f7;
+  --accent-color: #a855f7; /* Brighter accent color */
   --background-color: #1a0033;
-  --text-color: #ffffff;
-  --card-bg-color: rgba(138, 43, 226, 0.1);
-  --hover-card-shadow: rgba(138, 43, 226, 0.3);
+  --text-color: #ffffff; /* Text remains white for contrast */
+  --card-bg-color: rgba(138, 43, 226, 0.2); /* Increased opacity for better visibility */
+  --hover-card-shadow: rgba(138, 43, 226, 0.5); /* Stronger hover shadow */
+  --button-bg-color: #d10707; /* Button background color */
+  --button-hover-bg-color: #a80707; /* Darker button hover color */
 }
 
 body {
@@ -59,7 +61,7 @@ a:hover {
 }
 
 .hover-card {
-  @apply bg-opacity-10 rounded-lg p-5;
+  @apply bg-opacity-20 rounded-lg p-5; /* Increased opacity for better visibility */
   background-color: var(--card-bg-color);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -116,51 +118,62 @@ a:hover {
   }
 
   /* Global Variables */
-$scarlet-red: #d10707;
-$hover-scarlet: darken($scarlet-red, 10%);
-$input-text-color: black; // Ensure input text color remains consistent
+  $scarlet-red: #d10707;
+  $hover-scarlet: darken($scarlet-red, 10%);
+  $input-text-color: black; // Ensure input text color remains consistent
 
-/* Global Button Styles */
-.report-issue-btn,
-.submit-btn {
-  background-color: $scarlet-red;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  
-  &:hover {
-    background-color: $hover-scarlet;
+  /* Global Button Styles */
+  .report-issue-btn,
+  .submit-btn {
+    background-color: $scarlet-red;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background-color: $hover-scarlet;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+    }
   }
-}
 
-/* Input Field Styling */
-input,
-textarea {
-  color: $input-text-color !important;
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-  
-  &:focus {
-    outline: none;
-    border-color: $scarlet-red;
+  /* Input Field Styling */
+  input,
+  textarea {
+    color: $input-text-color !important;
+    border: 1px solid #ccc;
+    padding: 10px; /* Slightly increased padding for better touch targets */
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: $scarlet-red; /* Use button color for focus */
+      box-shadow: 0 0 5px $scarlet-red; /* Added shadow for focus */
+    }
   }
-}
 
-.form-group {
-  margin-bottom: 16px;
-}
+  .form-group {
+    margin-bottom: 16px;
+  }
 
-label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  display: block;
-}
+  label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--text-color); /* Label color for contrast */
+  }
 
   nav a {
     margin: 5px 0;
+    color: var(--text-color); /* Ensure nav links are visible */
+    transition: color 0.3s ease-in-out;
+  }
+
+  nav a:hover {
+    color: var(--accent-color); /* Change nav link color on hover */
   }
 }
