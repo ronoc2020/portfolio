@@ -2,7 +2,6 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Youtube, Twitter, Twitch } from "lucide-react";
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
@@ -19,27 +18,28 @@ type Repository = {
 };
 
 // Service Card Component
-const ServiceCard = ({ title }: { title: string }) => (
-  <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
-    <h3 className="text-lg font-semibold">{title}</h3>
-    <p className="text-gray-600">Detailed description about {title}.</p>
-    <Link href="#" className="mt-4 inline-block bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Learn More</Link>
+const ServiceCard = ({ title, url }: { title: string; url: string }) => (
+  <div className="border rounded-lg shadow-lg p-6 mb-4 bg-opacity-50 backdrop-filter backdrop-blur-lg transition-shadow transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+    <Link href={url} className="block">
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="text-gray-600">Uzyskaj więcej informacji na temat {title} i jak możemy Ci pomóc.</p>
+    </Link>
   </div>
 );
 
 // Services Section Component
 const ServicesSection = () => {
   const services = [
-    "IT Solutions and Services",
-    "Cloud Solutions Implementation",
-    "Network / Infrastructure Monitoring and Management",
-    "Cybersecurity",
+    { title: "IT Solutions and Services", url: "#" },
+    { title: "Cloud Solutions Implementation", url: "#" },
+    { title: "Network / Infrastructure Monitoring and Management", url: "#" },
+    { title: "Cybersecurity", url: "#" },
   ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {services.map((service) => (
-        <ServiceCard key={service} title={service} />
+      {services.map(service => (
+        <ServiceCard key={service.title} title={service.title} url={service.url} />
       ))}
     </div>
   );
@@ -143,6 +143,7 @@ const Home = () => {
             />
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
+          
           <div className="flex space-x-4 relative">
             {["Home", "About Me", "Services", "Contact", "Repositories", "FAQ"].map((item) => (
               <Link key={item} href={`#${item.replace(/\s+/g, "").toLowerCase()}`} className="hover:text-gray-300 no-underline">{item}</Link>
@@ -152,9 +153,9 @@ const Home = () => {
 
         {/* Hero Section */}
         <section className="mb-16 flex flex-col items-center text-center">
-          <h1 className="text-5xl font-bold mb-4 glow-text">Welcome to RO-NOC</h1>
-          <p className="text-lg mb-6">Your trusted partner in IT solutions and consulting.</p>
-          <Link href="#services" className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Explore Services</Link>
+          <h1 className="text-5xl font-bold mb-4 glow-text animate-fadeIn">Welcome to RO-NOC</h1>
+          <p className="text-lg mb-6 animate-fadeIn">Your trusted partner in IT solutions and consulting.</p>
+          <p className="text-md text-gray-300 mb-8 animate-fadeIn">With years of experience in delivering exceptional IT services, we help businesses thrive in a digital world.</p>
         </section>
 
         {/* Error Handling */}
@@ -167,20 +168,20 @@ const Home = () => {
           <>
             {/* Profile Section */}
             <section className="text-center mb-16" id="profile">
-              <h2 className="text-4xl font-bold mb-4">Roman Orlowski - Network Operation Center</h2>
-              <p className="text-xl mb-4">If you seek a skilled professional capable of seamlessly aligning diverse projects, please reach out.</p>
+              <h2 className="text-4xl font-bold mb-4 animate-fadeIn">Roman Orlowski - Network Operation Center</h2>
+              <p className="text-xl mb-4 animate-fadeIn">If you seek a skilled professional capable of seamlessly aligning diverse projects, please reach out. My expertise spans across various technology domains ensuring comprehensive IT support.</p>
             </section>
 
             {/* Services Section */}
             <section id="services" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">Our Services</h2>
+              <h2 className="text-4xl font-bold mb-4 animate-fadeIn">Our Services</h2>
               <ServicesSection />
             </section>
 
             {/* About Me Section */}
-            <section id="about" className="text-center mb-16">
+            <section id="about" className="text-center mb-16 animate-fadeIn">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
-              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity...</p>
+              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity. I am passionate about using technology to solve critical business challenges.</p>
               <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" className="mt-4 bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Read more about me</Link>
             </section>
 
@@ -194,9 +195,9 @@ const Home = () => {
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {repositories.map(repo => (
                     <li key={repo.id} className="mb-2">
-                      <div className="border rounded-lg shadow-lg p-6 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
+                      <div className="border rounded-lg shadow-lg p-6 bg-opacity-50 backdrop-filter backdrop-blur-lg transition-shadow hover:shadow-xl transform hover:-translate-y-1">
                         <h3 className="text-lg font-semibold">{repo.name}</h3>
-                        <p className="text-gray-600">⭐ {repo.stargazers_count}</p>
+                        <p className="text-gray-600">⭐ {repo.stargazers_count} star{repo.stargazers_count !== 1 ? 's' : ''}</p>
                         <Link
                           href={repo.html_url}
                           target="_blank"
@@ -215,7 +216,9 @@ const Home = () => {
             {/* Contact Section */}
             <section id="contact" className="mb-16">
               <h2 className="text-4xl font-bold mb-4">Report an Incident</h2>
-              <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem" target="_blank" className="mt-4 bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition-colors">Report</Link>
+              <div className="flex justify-center mb-4">
+                <Link href="https://sites.google.com/view/ro-noc/zgłóś-problem" target="_blank" className="mt-4 bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition-colors">Report</Link>
+              </div>
 
               <div className="flex justify-center space-x-4 mb-6 mt-4">
                 {[
