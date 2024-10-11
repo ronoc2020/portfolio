@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Container } from "@/components/ui/container";
 import { Github, Linkedin, Youtube, Twitter, Twitch } from "lucide-react";
 import Particles from "react-particles";
@@ -22,7 +22,7 @@ const ServiceCard = ({ title, url, description }: { title: string; url: string; 
 // Resume Card Component
 const ResumeCard = () => {
   return (
-    <div className="border border-transparent rounded-xl shadow-lg p-6 mb-4 bg-opacity-40 bg-black hover:bg-opacity-60 backdrop-filter backdrop-blur-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer">
+    <div className="border border-transparent rounded-xl shadow-lg p-6 mb-4 bg-opacity-40 bg-black hover:bg-opacity-60 backdrop-filter backdrop-blur-2xl transition-all duration-300">
       <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="block mb-4">
         <h3 className="text-lg font-semibold text-white neon-glow">Curriculum Vitae</h3>
       </Link>
@@ -113,58 +113,6 @@ const TestimonialsSection = () => {
   );
 };
 
-// Contact Form Component
-const ContactForm = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-  };
-
-  return (
-    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl mb-8">
-      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">Contact Me</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 text-white rounded-lg"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 text-white rounded-lg"
-          required
-        />
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 text-white rounded-lg"
-          rows={4}
-          required
-        ></textarea>
-        <button type="submit" className="w-full p-2 bg-cyan-500 rounded-lg hover:bg-cyan-400 transition duration-200">
-          Send Message
-        </button>
-      </form>
-    </section>
-  );
-};
 
 // Skills Section
 const SkillsSection = () => {
@@ -186,6 +134,24 @@ const SkillsSection = () => {
         ))}
       </ul>
     </section>
+  );
+};
+
+// Animated Text Component
+const AnimatedText = () => {
+  const [animationClass, setAnimationClass] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationClass((prev) => (prev === 'animate' ? '' : 'animate'));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <h1 className={`text-5xl font-bold mb-4 text-white neon-glow ${animationClass}`}>
+      Welcome to My Portfolio
+    </h1>
   );
 };
 
@@ -273,34 +239,14 @@ const Page = () => {
         }}
       />
       <Container className="relative z-10">
-        <h1 className="text-5xl font-bold mb-4 text-white neon-glow">Welcome to My Portfolio</h1>
-        <p className="text-gray-300 mb-8">I am an IT professional with a passion for technology and a commitment to excellence. Explore my work and connect with me.</p>
-        <ResumeCard />
+        <div className="text-center mb-8">
+          <AnimatedText />
+        </div>
         <ServicesSection />
         <TestimonialsSection />
-        <ContactForm />
         <SkillsSection />
+        <ResumeCard />
       </Container>
-      <footer className="bg-black bg-opacity-70 p-4 text-center text-white">
-        <p>© {new Date().getFullYear()} Your Name. All rights reserved.</p>
-        <div className="flex justify-center space-x-4 mt-2">
-          <Link href="https://github.com" target="_blank" aria-label="GitHub">
-            <Github className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
-          </Link>
-          <Link href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
-            <Linkedin className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
-          </Link>
-          <Link href="https://youtube.com" target="_blank" aria-label="YouTube">
-            <Youtube className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
-          </Link>
-          <Link href="https://twitter.com" target="_blank" aria-label="Twitter">
-            <Twitter className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
-          </Link>
-          <Link href="https://twitch.tv" target="_blank" aria-label="Twitch">
-            <Twitch className="w-6 h-6 text-white hover:text-cyan-400 transition duration-200" />
-          </Link>
-        </div>
-      </footer>
     </div>
   );
 };
