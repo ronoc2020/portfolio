@@ -114,7 +114,13 @@ const ServicesSection = () => {
 
       {/* Modal for service details */}
       {selectedService && (
-        <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="modal">
+        <Modal 
+          isOpen={modalIsOpen} 
+          onRequestClose={closeModal} 
+          className="modal" 
+          overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+          ariaHideApp={false} // Add this line to disable accessibility warning
+        >
           <h2 className="text-3xl font-bold mb-4">{selectedService.title}</h2>
           <p className="text-gray-300">{selectedService.details}</p>
           <button className="mt-4 bg-cyan-500 text-white py-2 px-4 rounded" onClick={closeModal}>
@@ -188,21 +194,11 @@ const SkillsSection = () => {
 
   return (
     <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl mb-8">
-      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">Skills</h2>
+      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">My Skills</h2>
       <div className="space-y-4">
         {skills.map((skill, index) => (
           <div key={index} className="flex justify-between items-center">
             <span className="text-gray-300">{skill.name}</span>
-            <div className="w-1/2 bg-gray-300 rounded-full h-2 overflow-hidden">
-              <div
-                className={classNames("h-full rounded-full", {
-                  "bg-cyan-500": skill.level >= 80,
-                  "bg-yellow-500": skill.level < 80 && skill.level >= 50,
-                  "bg-red-500": skill.level < 50,
-                })}
-                style={{ width: `${skill.level}%` }}
-              />
-            </div>
             <span className="text-gray-300">{skill.level}%</span>
           </div>
         ))}
@@ -211,24 +207,29 @@ const SkillsSection = () => {
   );
 };
 
-// Social Links Component
-const SocialLinks = () => {
-  const links = [
-    { href: "https://github.com/your-profile", icon: <Github className="h-6 w-6 text-white" /> },
-    { href: "https://linkedin.com/in/your-profile", icon: <Linkedin className="h-6 w-6 text-white" /> },
-    { href: "https://youtube.com/c/your-channel", icon: <Youtube className="h-6 w-6 text-white" /> },
-    { href: "https://twitter.com/your-profile", icon: <Twitter className="h-6 w-6 text-white" /> },
-    { href: "https://twitch.tv/your-channel", icon: <Twitch className="h-6 w-6 text-white" /> },
-  ];
-
+// Footer with Social Links
+const Footer = () => {
   return (
-    <div className="flex justify-center space-x-4 mt-8">
-      {links.map((link, index) => (
-        <Link key={index} href={link.href} target="_blank" rel="noopener noreferrer">
-          {link.icon}
+    <footer className="p-8 bg-black rounded-xl shadow-xl">
+      <div className="flex justify-center space-x-4">
+        <Link href="https://github.com/your-profile" target="_blank">
+          <Github className="text-gray-400 hover:text-gray-200 transition-colors" />
         </Link>
-      ))}
-    </div>
+        <Link href="https://www.linkedin.com/in/your-profile" target="_blank">
+          <Linkedin className="text-gray-400 hover:text-gray-200 transition-colors" />
+        </Link>
+        <Link href="https://www.youtube.com/user/your-profile" target="_blank">
+          <Youtube className="text-gray-400 hover:text-gray-200 transition-colors" />
+        </Link>
+        <Link href="https://twitter.com/your-profile" target="_blank">
+          <Twitter className="text-gray-400 hover:text-gray-200 transition-colors" />
+        </Link>
+        <Link href="https://www.twitch.tv/your-profile" target="_blank">
+          <Twitch className="text-gray-400 hover:text-gray-200 transition-colors" />
+        </Link>
+      </div>
+      <p className="text-center text-gray-400 mt-4">© {new Date().getFullYear()} Your Name. All rights reserved.</p>
+    </footer>
   );
 };
 
@@ -236,35 +237,66 @@ const SocialLinks = () => {
 const App = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
+  const particlesInit = useCallback(async (engine: Engine) => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback((container) => {
+    console.log(container);
+  }, []);
+
   return (
     <Container>
-      <div className={`min-h-screen p-6 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
-        <h1 className="text-5xl font-bold mb-8 text-white neon-glow">Welcome to My Portfolio</h1>
-        <button onClick={toggleDarkMode} className="mb-8 text-white bg-cyan-500 py-2 px-4 rounded">
+      <div className={classNames("bg-gray-800 min-h-screen", { "dark-mode": isDarkMode })}>
+        <button 
+          onClick={toggleDarkMode} 
+          className="absolute top-4 right-4 bg-gray-600 text-white py-2 px-4 rounded"
+        >
           Toggle Dark Mode
         </button>
-        
-        <Particles
-          id="tsparticles"
-          init={(main: Engine) => loadFull(main)}
+        <Particles 
+          id="tsparticles" 
+          init={particlesInit} 
+          loaded={particlesLoaded} 
           options={{
-            fullScreen: { enable: false },
             particles: {
-              number: { value: 100 },
+              number: { value: 80 },
               size: { value: 3 },
-              move: { speed: 1 },
               opacity: { value: 0.5 },
+              shape: {
+                type: "circle",
+              },
+              move: {
+                enable: true,
+                speed: 3,
+              },
+            },
+            interactivity: {
+              events: {
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                onClick: {
+                  enable: true,
+                  mode: "push",
+                },
+              },
             },
           }}
         />
-
-        <ServicesSection />
-        <TestimonialsSection />
-        <SkillsSection />
-        <SocialLinks />
+        <main className="p-8">
+          <h1 className="text-5xl font-bold text-white neon-glow mb-8">Welcome to My Portfolio</h1>
+          <ServicesSection />
+          <TestimonialsSection />
+          <SkillsSection />
+          <ResumeCard />
+          <Footer />
+        </main>
       </div>
     </Container>
   );
 };
 
 export default App;
+
