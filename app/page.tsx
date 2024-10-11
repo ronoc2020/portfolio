@@ -9,6 +9,7 @@ import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
 import Modal from "react-modal"; // Ensure you have react-modal installed
 import classNames from "classnames"; // Ensure you have classnames installed
+import React from 'react';
 
 // Custom hook for managing dark/light mode
 const useDarkMode = () => {
