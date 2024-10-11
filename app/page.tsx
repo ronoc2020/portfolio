@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { Container } from "@/components/ui/container";
 import { Github, Linkedin, Youtube, Twitter, Twitch } from "lucide-react";
 import Particles from "react-particles";
@@ -8,14 +8,6 @@ import { loadFull } from "tsparticles";
 import type { Engine } from "tsparticles-engine";
 import Link from "next/link";
 import Image from "next/image";
-
-// Type Definitions
-type Repository = {
-  id: number;
-  name: string;
-  stargazers_count: number;
-  html_url: string;
-};
 
 // Service Card Component
 const ServiceCard = ({ title, url, description }: { title: string; url: string; description: string }) => (
@@ -28,27 +20,29 @@ const ServiceCard = ({ title, url, description }: { title: string; url: string; 
 );
 
 // Resume Card Component
-const ResumeCard = () => (
-  <div className="border border-transparent rounded-xl shadow-lg p-6 mb-4 bg-opacity-40 bg-black hover:bg-opacity-60 backdrop-filter backdrop-blur-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer">
-    <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="block mb-4">
-      <h3 className="text-lg font-semibold text-white neon-glow">Curriculum Vitae</h3>
-    </Link>
-    <h4 className="text-md font-semibold text-cyan-400 mb-4">About Me</h4>
-    <p className="text-gray-300">
-      Father of two, confident and self-taught IT professional with over 15 years of experience in infrastructure, customer management, support, networking, cloud solutions, and cybersecurity.
-    </p>
-    <h4 className="text-md font-semibold text-cyan-400 mt-2 mb-4">Work Experience</h4>
-    <ul className="list-disc list-inside text-gray-300">
-      <li>LTI MindTree Ltd - Senior Engineer for Cloud and Infra (June 2023 – February 2024)</li>
-      <li>Intellias - Support Engineer (January 2022 – April 2023)</li>
-      <li>Sperasoft - NOC Engineer (July 2020 – October 2020)</li>
-      <li>Grand Parade, William Hill - Production Operations Analyst (August 2019 – March 2020)</li>
-    </ul>
-    <h4 className="text-md font-semibold text-cyan-400 mt-2 mb-4">Certifications & Trainings</h4>
-    <p className="text-gray-300">SEP Authorization, MDF Accreditation, Crane Operations, Driving License (cat. D), ISO 9001:2015.</p>
-    <p className="text-gray-300">CCNA, HCNA-HNTD, AZ-900, AZ-104, AZ-500, L100, L200.</p>
-  </div>
-);
+const ResumeCard = () => {
+  return (
+    <div className="border border-transparent rounded-xl shadow-lg p-6 mb-4 bg-opacity-40 bg-black hover:bg-opacity-60 backdrop-filter backdrop-blur-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer">
+      <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="block mb-4">
+        <h3 className="text-lg font-semibold text-white neon-glow">Curriculum Vitae</h3>
+      </Link>
+      <h4 className="text-md font-semibold text-cyan-400 mb-4">About Me</h4>
+      <p className="text-gray-300">
+        Father of two, confident and self-taught IT professional with over 15 years of experience in infrastructure, customer management, support, networking, cloud solutions, and cybersecurity.
+      </p>
+      <h4 className="text-md font-semibold text-cyan-400 mt-2 mb-4">Work Experience</h4>
+      <ul className="list-disc list-inside text-gray-300">
+        <li>LTI MindTree Ltd - Senior Engineer for Cloud and Infra (June 2023 – February 2024)</li>
+        <li>Intellias - Support Engineer (January 2022 – April 2023)</li>
+        <li>Sperasoft - NOC Engineer (July 2020 – October 2020)</li>
+        <li>Grand Parade, William Hill - Production Operations Analyst (August 2019 – March 2020)</li>
+      </ul>
+      <h4 className="text-md font-semibold text-cyan-400 mt-2 mb-4">Certifications & Trainings</h4>
+      <p className="text-gray-300">SEP Authorization, MDF Accreditation, Crane Operations, Driving License (cat. D), ISO 9001:2015.</p>
+      <p className="text-gray-300">CCNA, HCNA-HNTD, AZ-900, AZ-104, AZ-500, L100, L200.</p>
+    </div>
+  );
+};
 
 // Services Section Component
 const ServicesSection = () => {
@@ -87,65 +81,82 @@ const ServicesSection = () => {
   );
 };
 
-// Settings Component
-const Settings = () => {
-  const [bgVideo, setBgVideo] = useState(false);
-  const [transparency, setTransparency] = useState(0.5);
+// RSS Feeds Section
+const RssSection = () => {
+  const rssFeeds = [
+    { title: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews?format=xml" },
+    { title: "Dark Reading", url: "https://www.darkreading.com/rss/all.xml" },
+    { title: "Infosecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/" },
+    { title: "GitHub Repositories", url: "https://github.com/ronoc2020?tab=repositories" },
+  ];
 
   return (
-    <div className="flex flex-col space-y-4">
-      <label className="text-white">
-        Enable Background Video
-        <input type="checkbox" checked={bgVideo} onChange={() => setBgVideo(!bgVideo)} className="ml-2" />
-      </label>
-      <label className="text-white">
-        Background Transparency
-        <input type="range" min="0" max="1" step="0.1" value={transparency} onChange={(e) => setTransparency(e.target.value)} />
-      </label>
-    </div>
+    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl">
+      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">RSS Feeds</h2>
+      <ul className="list-disc list-inside text-gray-300">
+        {rssFeeds.map((feed, index) => (
+          <li key={index}>
+            <Link href={feed.url} className="text-cyan-400 hover:underline">{feed.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+// Footer Component
+const Footer = () => {
+  return (
+    <footer className="bg-black bg-opacity-50 p-4 text-center text-gray-300 rounded-t-lg shadow-lg">
+      <p>&copy; {new Date().getFullYear()} Your Name. All Rights Reserved.</p>
+      <div className="flex justify-center space-x-4">
+        <Link href="https://github.com/ronoc2020" className="text-gray-400 hover:text-white">
+          <Github className="w-6 h-6" />
+        </Link>
+        <Link href="https://www.linkedin.com/in/ro-noc-182714306/" className="text-gray-400 hover:text-white">
+          <Linkedin className="w-6 h-6" />
+        </Link>
+        <Link href="https://www.youtube.com/@RO-NOC" className="text-gray-400 hover:text-white">
+          <Youtube className="w-6 h-6" />
+        </Link>
+        <Link href="https://www.twitch.tv/ro_noc2020" className="text-gray-400 hover:text-white">
+          <Twitch className="w-6 h-6" />
+        </Link>
+        <Link href="https://x.com/noc_ro" className="text-gray-400 hover:text-white">
+          <Twitter className="w-6 h-6" />
+        </Link>
+      </div>
+    </footer>
+  );
+};
+
+// Sidebar Component
+const Sidebar = () => {
+  return (
+    <aside className="w-60 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold mb-4">Quick Links</h2>
+      <ul className="space-y-2">
+        <li>
+          <Link href="/" className="hover:underline">Home</Link>
+        </li>
+        <li>
+          <Link href="https://sites.google.com/view/ro-noc/doradztwo-it" className="hover:underline">Services</Link>
+        </li>
+        <li>
+          <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="hover:underline">CV</Link>
+        </li>
+        <li>
+          <Link href="#rss" className="hover:underline">RSS Feeds</Link>
+        </li>
+      </ul>
+    </aside>
   );
 };
 
 // Main Component
 const Home = () => {
-  const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const apiToken = process.env.NEXT_PUBLIC_GITHUB_API_TOKEN || ""; 
-
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
-  }, []);
-
-  // Fetch GitHub Repositories
-  const fetchRepositories = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("https://api.github.com/users/ronoc2020/repos", {
-        headers: {
-          Authorization: `token ${apiToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch repositories: ${response.status} ${response.statusText}`);
-      }
-
-      const data: Repository[] = await response.json();
-      setRepositories(data);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      setError(message);
-      console.error("Error fetching repositories:", message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRepositories();
   }, []);
 
   return (
@@ -155,119 +166,67 @@ const Home = () => {
         init={particlesInit}
         options={{
           background: { color: { value: "transparent" }},
-          fpsLimit: 120,
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 }},
+            size: { value: 3 },
+            move: { direction: "none", speed: 1, random: false, straight: false, out_mode: "out" },
+            opacity: { value: 0.5, anim: { enable: false }},
+          },
           interactivity: {
             events: {
-              onClick: { enable: true, mode: "push" },
-              onHover: { enable: true, mode: "repulse" },
+              onhover: { enable: true, mode: "repulse" },
+              onclick: { enable: true, mode: "push" },
               resize: true,
             },
             modes: {
-              push: { quantity: 4 },
+              grab: { distance: 400, line_linked: { opacity: 1 }},
+              bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
               repulse: { distance: 200, duration: 0.4 },
+              push: { particles_nb: 4 },
+              remove: { particles_nb: 2 },
             },
           },
-          particles: {
-            color: { value: "#00ff00" },
-            links: {
-              color: "#ffffff",
-              distance: 150,
-              enable: true,
-              opacity: 0.6,
-              width: 2,
-            },
-            move: {
-              direction: "none",
-              enable: true,
-              outModes: { default: "bounce" },
-              speed: 5,
-              straight: false,
-            },
-            number: { density: { enable: true, area: 800 }, value: 100 },
-            opacity: { value: 0.5 },
-            shape: { type: ["circle", "star"] },
-            size: { value: { min: 1, max: 8 } },
-          },
-          detectRetina: true,
         }}
       />
 
-      <Container>
-        {/* Navigation */}
-        <nav className="flex justify-between items-center w-full mb-16 z-10 p-6 bg-opacity-70 backdrop-filter backdrop-blur-xl shadow-lg rounded-lg">
-          <div className="flex items-center">
-            <div className="w-24 h-24 rounded-full border-4 border-cyan-500 overflow-hidden">
-              <Image
-                src="https://imgur.com/XzVeiIb.gif" 
-                alt="RO-NOC Logo"
-                width={90}
-                height={90}
-                className="object-cover" 
-              />
-            </div>
-            <h1 className="text-5xl font-bold ml-4 text-white neon-glow">Roman Orzechowski</h1>
+      {/* Navbar */}
+      <nav className="flex justify-between items-center w-full p-4 bg-opacity-50 bg-black rounded-b-lg shadow-lg">
+        <div className="flex items-center">
+          <div className="w-24 h-24 border-4 border-white rounded-full overflow-hidden">
+            <Image src="https://imgur.com/XzVeiIb" alt="Logo" width={96} height={96} className="object-cover" />
           </div>
-
-          {/* Social Icons */}
-          <div className="flex space-x-6">
-            <Link href="https://github.com/ronoc2020" className="text-gray-400 hover:text-white">
-              <Github className="w-8 h-8" />
-            </Link>
-            <Link href="https://www.linkedin.com/in/roman-orzechowski" className="text-gray-400 hover:text-white">
-              <Linkedin className="w-8 h-8" />
-            </Link>
-            <Link href="https://twitter.com/RomanOrzechowsk" className="text-gray-400 hover:text-white">
-              <Twitter className="w-8 h-8" />
-            </Link>
-            <Link href="https://www.twitch.tv/ronoc2020" className="text-gray-400 hover:text-white">
-              <Twitch className="w-8 h-8" />
-            </Link>
-            <Link href="https://www.youtube.com/channel/UCcAY1mjtdhRjxzYO9HTlhFg" className="text-gray-400 hover:text-white">
-              <Youtube className="w-8 h-8" />
-            </Link>
-          </div>
-        </nav>
-
-        {/* Content */}
-        <div className="mt-12">
-          <h2 className="text-3xl font-bold text-white neon-glow mb-6">Welcome to my world!</h2>
-          <p className="text-xl text-gray-200 mb-8">
-            As an experienced IT professional with diverse skills, I'm here to help your business grow and secure your IT infrastructure.
-          </p>
         </div>
+        <div className="flex space-x-4">
+          <Link href="https://x.com/noc_ro" className="text-gray-400 hover:text-white">
+            <Twitter className="w-8 h-8" />
+          </Link>
+          <Link href="https://www.linkedin.com/in/ro-noc-182714306/" className="text-gray-400 hover:text-white">
+            <Linkedin className="w-8 h-8" />
+          </Link>
+          <Link href="https://www.youtube.com/@RO-NOC" className="text-gray-400 hover:text-white">
+            <Youtube className="w-8 h-8" />
+          </Link>
+          <Link href="https://www.twitch.tv/ro_noc2020" className="text-gray-400 hover:text-white">
+            <Twitch className="w-8 h-8" />
+          </Link>
+        </div>
+      </nav>
 
-        {/* Services */}
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col items-center">
+        <h2 className="text-6xl font-bold mb-4 text-white neon-glow">Welcome to My Portfolio</h2>
+        <p className="text-lg text-gray-300 mb-8">Explore my services and get to know me better!</p>
+
+        <ResumeCard />
         <ServicesSection />
+        <RssSection />
+      </div>
 
-        {/* Settings */}
-        <section className="mt-16">
-          <h2 className="text-3xl font-bold text-white neon-glow mb-6">Personalize your Experience</h2>
-          <Settings />
-        </section>
-      </Container>
-
-      {/* GitHub Repositories Section */}
-      <section className="p-8 mt-16 bg-gradient-to-tr from-black to-purple-900 rounded-xl shadow-xl">
-        <h2 className="text-3xl font-bold text-white neon-glow mb-6">My GitHub Repositories</h2>
-
-        {loading ? (
-          <p className="text-gray-400">Loading repositories...</p>
-        ) : error ? (
-          <p className="text-red-500">Error fetching repositories: {error}</p>
-        ) : repositories.length > 0 ? (
-          <ul className="space-y-4">
-            {repositories.map((repo) => (
-              <li key={repo.id}>
-                <Link href={repo.html_url} className="text-cyan-400 hover:underline">
-                  {repo.name} ({repo.stargazers_count} stars)
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-400">No repositories found.</p>
-        )}
-      </section>
+      {/* Footer Component */}
+      <Footer />
     </main>
   );
 };
