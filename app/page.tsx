@@ -39,8 +39,8 @@ const ServicesSection = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {services.map((service, index) => (
-        <ServiceCard key={index} title={service} />
+      {services.map((service) => (
+        <ServiceCard key={service} title={service} />
       ))}
     </div>
   );
@@ -96,6 +96,7 @@ const Home = () => {
     setFilteredRepositories(filtered);
   };
 
+  // Effect for fetching repositories on mount
   useEffect(() => {
     fetchRepositories();
   }, []);
@@ -106,7 +107,7 @@ const Home = () => {
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: { color: { value: "transparent" } },
+          background: { color: { value: "transparent" }},
           fpsLimit: 120,
           interactivity: {
             events: {
@@ -167,18 +168,16 @@ const Home = () => {
               <Link href="#services" className="hover:text-gray-300">Services</Link>
               <div className="hidden group-hover:block absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
                 <ul className="py-2">
-                  <li>
-                    <Link href="https://sites.google.com/view/ro-noc/doradztwo-it" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">IT Consultancy</Link>
-                  </li>
-                  <li>
-                    <Link href="https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Cloud Solutions</Link>
-                  </li>
-                  <li>
-                    <Link href="https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Infrastructure Management</Link>
-                  </li>
-                  <li>
-                    <Link href="https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Cybersecurity</Link>
-                  </li>
+                  {[ // Dynamic Dropdown
+                    { name: "IT Consultancy", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
+                    { name: "Cloud Solutions", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
+                    { name: "Infrastructure Management", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
+                    { name: "Cybersecurity", url: "https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" }
+                  ].map(({ name, url }) => (
+                    <li key={name}>
+                      <Link href={url} className="block px-4 py-2 text-gray-800 hover:bg-gray-200">{name}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -201,7 +200,6 @@ const Home = () => {
             <section className="text-center mb-16" id="profile">
               <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
               <p className="text-xl mb-4">If you seek a skilled professional capable of seamlessly aligning diverse projects, please reach out.</p>
-              <p className="text-lg mb-4">Strengths include:</p>
             </section>
 
             {/* Services Section */}
@@ -213,9 +211,9 @@ const Home = () => {
             {/* About Me Section */}
             <section id="about" className="text-center mb-16">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
-              <p className="text-xl mb-4">I am well-organized with over 15 years of IT experience. My strengths lie in infrastructure, cybersecurity, and project leadership.</p>
+              <p className="text-xl mb-4">I am well-organized with over 15 years of IT experience, focusing on infrastructure, cybersecurity, and project leadership.</p>
               <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
-                <Link href="https://sites.google.com/view/ro-noc/o-mnie">Read more about me</Link>
+                <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank">Read more about me</Link>
               </button>
             </section>
 
@@ -238,7 +236,7 @@ const Home = () => {
                 <div>No repositories found for "{searchQuery}".</div>
               )}
               <ul className="mb-5">
-                {filteredRepositories.map((repo) => (
+                {filteredRepositories.map(repo => (
                   <li key={repo.id} className="mb-2">
                     <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                       {repo.name} - ⭐ {repo.stargazers_count}
@@ -253,34 +251,36 @@ const Home = () => {
               <h2 className="text-4xl font-bold mb-4">Contact Me</h2>
               <p className="text-lg mb-4">Feel free to reach out for any queries or collaborations.</p>
               <div className="flex justify-center space-x-4 mb-6">
-                <Link href="https://github.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Github className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-                </Link>
-                <Link href="https://www.linkedin.com/in/ro-noc-182714306/" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-                </Link>
-                <Link href="https://www.youtube.com/@RO-NOC" target="_blank" rel="noopener noreferrer">
-                  <Youtube className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-                </Link>
-                <Link href="https://x.com/noc_ro" target="_blank" rel="noopener noreferrer">
-                  <Twitter className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-                </Link>
-                <Link href="https://www.twitch.tv/ro_noc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitch className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-                </Link>
+                {[ // Icon Links
+                  { href: "https://github.com/ronoc2020", icon: <Github className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
+                  { href: "https://www.linkedin.com/in/ro-noc-182714306/", icon: <Linkedin className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
+                  { href: "https://www.youtube.com/@RO-NOC", icon: <Youtube className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
+                  { href: "https://x.com/noc_ro", icon: <Twitter className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
+                  { href: "https://www.twitch.tv/ro_noc2020", icon: <Twitch className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
+                ].map(({ href, icon }) => (
+                  <Link key={href} href={href} target="_blank" rel="noopener noreferrer">
+                    {icon}
+                  </Link>
+                ))}
               </div>
 
               <h3 className="text-2xl font-bold mb-2">Useful Links</h3>
               <ul className="list-disc list-inside mb-4 text-lg">
-                <li><Link href="https://sites.google.com/view/ro-noc/strona-główna" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Home</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">About Me</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/doradztwo-it" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">IT Consulting</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Cloud Solutions Implementation</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Network Infrastructure Monitoring and Management</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/cyberbezpieczeństwo" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Cybersecurity</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/faq" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">FAQ</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/kontakt" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Contact</Link></li>
-                <li><Link href="https://sites.google.com/view/ro-noc/kontakt/polityka-prywatności" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">Privacy Policy</Link></li>
+                {[ // Useful links
+                  { name: "Home", url: "https://sites.google.com/view/ro-noc/strona-główna" },
+                  { name: "About Me", url: "https://sites.google.com/view/ro-noc/o-mnie" },
+                  { name: "IT Consulting", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
+                  { name: "Cloud Solutions Implementation", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
+                  { name: "Network Infrastructure Monitoring", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
+                  { name: "Cybersecurity", url: "https://sites.google.com/view/ro-noc/cyberbezpieczeństwo" },
+                  { name: "FAQ", url: "https://sites.google.com/view/ro-noc/faq" },
+                  { name: "Contact", url: "https://sites.google.com/view/ro-noc/kontakt" },
+                  { name: "Privacy Policy", url: "https://sites.google.com/view/ro-noc/kontakt/polityka-prywatności" },
+                ].map(({ name, url }) => (
+                  <li key={name}>
+                    <Link href={url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">{name}</Link>
+                  </li>
+                ))}
               </ul>
             </section>
           </>
@@ -292,10 +292,14 @@ const Home = () => {
         <div className="text-center">
           <h3 className="text-xl mb-2">Stay Updated</h3>
           <div className="flex justify-center space-x-4">
-            <Link href="https://feeds.feedburner.com/TheHackersNews?format=xml" target="_blank" className="hover:text-gray-400">The Hacker News RSS</Link>
-            <Link href="https://www.darkreading.com/rss/all.xml" target="_blank" className="hover:text-gray-400">Dark Reading RSS</Link>
-            <Link href="https://www.infosecurity-magazine.com/rss/news/" target="_blank" className="hover:text-gray-400">Infosecurity Magazine RSS</Link>
-            <Link href="https://github.com/ronoc2020?tab=repositories" target="_blank" className="hover:text-gray-400">GitHub Repositories</Link>
+            {[ // RSS Links
+              { name: "The Hacker News RSS", url: "https://feeds.feedburner.com/TheHackersNews?format=xml" },
+              { name: "Dark Reading RSS", url: "https://www.darkreading.com/rss/all.xml" },
+              { name: "Infosecurity Magazine RSS", url: "https://www.infosecurity-magazine.com/rss/news/" },
+              { name: "GitHub Repositories", url: "https://github.com/ronoc2020?tab=repositories" },
+            ].map(({ name, url }) => (
+              <Link key={name} href={url} target="_blank" className="hover:text-gray-400">{name}</Link>
+            ))}
           </div>
         </div>
       </footer>
