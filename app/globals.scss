@@ -120,19 +120,17 @@ nav a {
 }
 
 // Neon Card Styling
-<style jsx global>{`
-  .neon-card {
-    background: rgba(0, 0, 0, 0.6);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .neon-card:hover {
+.neon-card {
+  background: rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
     box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
   }
-  
-  .neon-glow {
-    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
-  }
-`}
+}
+
+.neon-glow {
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+}
