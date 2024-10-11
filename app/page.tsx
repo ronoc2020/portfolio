@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,13 @@ type FeedItem = {
   title: string;
   link: string;
 };
+
 type FeedSource = {
   source: string;
   url: string;
   items: FeedItem[];
 };
+
 type Repository = {
   id: number;
   name: string;
@@ -224,57 +227,74 @@ export default function Home() {
               ))}
             </section>
 
-            {/* Repositories Section */}
-            <section id="repositories" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4">My GitHub Repositories</h2>
-              <form onSubmit={handleSearch} className="mb-4">
+            {/* Search Repositories Section */}
+            <section id="search" className="mb-16">
+              <h2 className="text-4xl font-bold mb-4">Search Repositories</h2>
+              <form onSubmit={handleSearch} className="flex space-x-2">
                 <Input
                   type="text"
-                  placeholder="Search repositories..."
+                  placeholder="Search Repositories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="mr-2"
+                  className="flex-grow"
                 />
-                <Button type="submit">
-                  <Search className="w-5 h-5" />
+                <Button type="submit" className="flex-none">
+                  <Search />
                 </Button>
               </form>
-              {filteredRepositories.length === 0 ? (
-                <p>No repositories found.</p>
-              ) : (
-                <ul>
-                  {filteredRepositories.map((repo) => (
-                    <li key={repo.id} className="mb-2">
+              <div className="mt-4">
+                {filteredRepositories.map((repo) => (
+                  <div key={repo.id} className="mb-2">
+                    <h4 className="text-lg font-semibold">
                       <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                        {repo.name} ({repo.stargazers_count} stars)
+                        {repo.name}
                       </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
+                    </h4>
+                    <p>{repo.stargazers_count} ⭐️</p>
+                  </div>
+                ))}
+              </div>
             </section>
 
             {/* Contact Section */}
             <section id="contact" className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4">Contact Me</h2>
-              <p className="text-lg mb-4">Feel free to reach out!</p>
+              <p className="text-xl mb-4">Feel free to reach out via:</p>
               <div className="flex justify-center space-x-4">
-                <a href="https://twitter.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitter className="h-6 w-6" />
-                </a>
                 <a href="https://github.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Github className="h-6 w-6" />
+                  <Github size={32} className="hover:text-gray-300" />
                 </a>
-                <a href="https://linkedin.com/in/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="h-6 w-6" />
+                <a href="https://www.linkedin.com/in/ron-orlowski" target="_blank" rel="noopener noreferrer">
+                  <Linkedin size={32} className="hover:text-gray-300" />
                 </a>
-                <a href="https://youtube.com/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Youtube className="h-6 w-6" />
+                <a href="https://www.youtube.com/@ronoc2020" target="_blank" rel="noopener noreferrer">
+                  <Youtube size={32} className="hover:text-gray-300" />
                 </a>
-                <a href="https://twitch.tv/ronoc2020" target="_blank" rel="noopener noreferrer">
-                  <Twitch className="h-6 w-6" />
+                <a href="https://twitter.com/ronoc2020" target="_blank" rel="noopener noreferrer">
+                  <Twitter size={32} className="hover:text-gray-300" />
+                </a>
+                <a href="https://www.twitch.tv/ronoc2020" target="_blank" rel="noopener noreferrer">
+                  <Twitch size={32} className="hover:text-gray-300" />
                 </a>
               </div>
+            </section>
+
+            {/* Repositories Section */}
+            <section id="repositories" className="mb-16">
+              <h2 className="text-4xl font-bold mb-4">My Repositories</h2>
+              {repositories.length > 0 ? (
+                <ul>
+                  {repositories.map((repo) => (
+                    <li key={repo.id}>
+                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        {repo.name}
+                      </a> - {repo.stargazers_count} stars
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div>No repositories available.</div>
+              )}
             </section>
           </>
         )}
