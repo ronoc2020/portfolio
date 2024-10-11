@@ -1,10 +1,10 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  // Enable JIT mode by default for faster build times and on-demand class generation
+  // Enable JIT mode for faster build times and on-demand class generation
   mode: 'jit',
   
-  // Enable dark mode with class toggling (e.g., <html class="dark">)
+  // Enable dark mode with class toggling
   darkMode: 'class',
   
   // Specify the paths to all of your template files
@@ -22,19 +22,19 @@ const config: Config = {
         primary: 'var(--primary-color)',
         secondary: 'var(--secondary-color)',
         background: 'var(--background-color)',
-        // Add any additional custom colors here
+        // Additional custom colors can go here
       },
       // Custom fonts
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],
         heading: ['Montserrat', 'sans-serif'],
-        // Add additional custom font families here
+        // Additional custom font families can go here
       },
       // Custom animations
       animation: {
         glow: 'glow 2s ease-in-out infinite alternate',
       },
-      // Keyframes for animations
+      // Keyframes for the custom animation
       keyframes: {
         glow: {
           '0%': {
@@ -55,13 +55,13 @@ const config: Config = {
       },
     },
   },
-  
+
   // Add plugins to extend Tailwind's functionality
   plugins: [
     require('@tailwindcss/forms'), // For better form styles
     require('@tailwindcss/typography'), // For better typography styles
-    require('tailwindcss-animate'), // Custom animations
-    // Add any other plugins you may need here
+    require('tailwindcss-animate'), // For custom animations
+    // Add any other plugins as needed
   ],
 };
 
