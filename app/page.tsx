@@ -27,6 +27,19 @@ const ServiceCard = ({ title, url }: { title: string; url: string }) => (
   </div>
 );
 
+// Resume Card Component
+const ResumeCard = () => (
+  <div className="border rounded-lg shadow-lg p-6 mb-4 bg-opacity-50 backdrop-filter backdrop-blur-lg transition-shadow transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+    <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="block">
+      <h3 className="text-lg font-semibold">Curriculum Vitae</h3>
+      <p className="text-gray-600">Roman Orlowski</p>
+      <p className="text-gray-600">+48 695 295 641</p>
+      <p className="text-gray-600">ronoc2020@gmail.com</p>
+      <p className="text-gray-600">Click for more details.</p>
+    </Link>
+  </div>
+);
+
 // Services Section Component
 const ServicesSection = () => {
   const services = [
@@ -41,6 +54,7 @@ const ServicesSection = () => {
       {services.map(service => (
         <ServiceCard key={service.title} title={service.title} url={service.url} />
       ))}
+      <ResumeCard />
     </div>
   );
 };
@@ -181,8 +195,17 @@ const Home = () => {
             {/* About Me Section */}
             <section id="about" className="text-center mb-16 animate-fadeIn">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
-              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity. I am passionate about using technology to solve critical business challenges.</p>
-              <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" className="mt-4 bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Read more about me</Link>
+              <p className="text-xl mb-4">Father of two, confident and conscious IT professional with over 15 years of experience in infrastructure, customer management, and diverse project domains.</p>
+              <Link href="https://sites.google.com/view/ro-noc/about-me" target="_blank" className="mt-4 bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Read more about me</Link>
+              <div className="mt-6">
+                <h4 className="text-lg font-semibold">Work Experience:</h4>
+                <ul className="list-disc list-inside">
+                  <li>LTI MindTree Ltd - Senior Engineer for Cloud and Infra</li>
+                  <li>Intellias - Support Engineer</li>
+                  <li>Sperasoft - NOC Engineer</li>
+                  <li>Grand Parade, William Hill - Production Operations Analyst</li>
+                </ul>
+              </div>
             </section>
 
             {/* Repositories List Section */}
