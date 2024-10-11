@@ -11,10 +11,13 @@ import Modal from "react-modal"; // Ensure you have react-modal installed
 import classNames from "classnames"; // Ensure you have classnames installed
 import React from 'react';
 
+// Ensure the modal is bound to the app element
+Modal.setAppElement('#__next'); // Replace with your app's main element if different
+
 // Custom hook for managing dark/light mode
 const useDarkMode = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  
+
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => !prevMode);
   };
@@ -28,7 +31,7 @@ const useDarkMode = () => {
 
 // Service Card Component
 const ServiceCard = ({ title, description, onClick }) => (
-  <div 
+  <div
     className="border border-transparent rounded-xl shadow-lg p-6 mb-4 bg-opacity-30 bg-black hover:bg-opacity-50 backdrop-filter backdrop-blur-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
     onClick={onClick}
   >
@@ -64,25 +67,25 @@ const ResumeCard = () => (
 const ServicesSection = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  
+
   const services = [
-    { 
-      title: "IT Solutions and Services", 
+    {
+      title: "IT Solutions and Services",
       description: "Comprehensive consulting in planning and implementing IT strategies to help your business achieve its goals.",
       details: "Detailed information about IT Solutions and Services."
     },
-    { 
-      title: "Implementation of Cloud Solutions", 
+    {
+      title: "Implementation of Cloud Solutions",
       description: "Specializing in migrating and implementing cloud solutions, adapting them to your company's needs.",
       details: "Detailed information about Implementation of Cloud Solutions."
     },
-    { 
-      title: "Network/Infrastructure Monitoring and Management", 
+    {
+      title: "Network/Infrastructure Monitoring and Management",
       description: "Monitoring IT infrastructure to ensure its continuity and quick response to problems.",
       details: "Detailed information about Network/Infrastructure Monitoring and Management."
     },
-    { 
-      title: "Cybersecurity", 
+    {
+      title: "Cybersecurity",
       description: "Services in IT infrastructure protection, including EDR tools, threat management, and security policy implementation.",
       details: "Detailed information about Cybersecurity."
     },
@@ -103,23 +106,22 @@ const ServicesSection = () => {
       <h2 className="text-4xl font-bold mb-8 text-white neon-glow">My Services</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {services.map((service, index) => (
-          <ServiceCard 
-            key={index} 
-            title={service.title} 
-            description={service.description} 
-            onClick={() => openModal(service)} 
+          <ServiceCard
+            key={index}
+            title={service.title}
+            description={service.description}
+            onClick={() => openModal(service)}
           />
         ))}
       </div>
 
       {/* Modal for service details */}
       {selectedService && (
-        <Modal 
-          isOpen={modalIsOpen} 
-          onRequestClose={closeModal} 
-          className="modal" 
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          className="modal"
           overlayClassName="fixed inset-0 bg-black bg-opacity-75"
-          ariaHideApp={false} // Add this line to disable accessibility warning
         >
           <h2 className="text-3xl font-bold mb-4">{selectedService.title}</h2>
           <p className="text-gray-300">{selectedService.details}</p>
@@ -197,9 +199,9 @@ const SkillsSection = () => {
       <h2 className="text-4xl font-bold mb-8 text-white neon-glow">My Skills</h2>
       <div className="space-y-4">
         {skills.map((skill, index) => (
-          <div key={index} className="flex justify-between items-center">
+          <div key={index} className="flex justify-between mb-2">
             <span className="text-gray-300">{skill.name}</span>
-            <span className="text-gray-300">{skill.level}%</span>
+            <span className="text-gray-400">{skill.level}%</span>
           </div>
         ))}
       </div>
@@ -207,96 +209,142 @@ const SkillsSection = () => {
   );
 };
 
-// Footer with Social Links
-const Footer = () => {
-  return (
-    <footer className="p-8 bg-black rounded-xl shadow-xl">
-      <div className="flex justify-center space-x-4">
-        <Link href="https://github.com/your-profile" target="_blank">
-          <Github className="text-gray-400 hover:text-gray-200 transition-colors" />
-        </Link>
-        <Link href="https://www.linkedin.com/in/your-profile" target="_blank">
-          <Linkedin className="text-gray-400 hover:text-gray-200 transition-colors" />
-        </Link>
-        <Link href="https://www.youtube.com/user/your-profile" target="_blank">
-          <Youtube className="text-gray-400 hover:text-gray-200 transition-colors" />
-        </Link>
-        <Link href="https://twitter.com/your-profile" target="_blank">
-          <Twitter className="text-gray-400 hover:text-gray-200 transition-colors" />
-        </Link>
-        <Link href="https://www.twitch.tv/your-profile" target="_blank">
-          <Twitch className="text-gray-400 hover:text-gray-200 transition-colors" />
-        </Link>
-      </div>
-      <p className="text-center text-gray-400 mt-4">© {new Date().getFullYear()} Your Name. All rights reserved.</p>
-    </footer>
-  );
-};
-
-// Main App Component
-const App = () => {
+// Main Component
+const MainPage = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
 
-  const particlesLoaded = useCallback((container) => {
-    console.log(container);
-  }, []);
-
   return (
     <Container>
-      <div className={classNames("bg-gray-800 min-h-screen", { "dark-mode": isDarkMode })}>
-        <button 
-          onClick={toggleDarkMode} 
-          className="absolute top-4 right-4 bg-gray-600 text-white py-2 px-4 rounded"
-        >
-          Toggle Dark Mode
-        </button>
-        <Particles 
-          id="tsparticles" 
-          init={particlesInit} 
-          loaded={particlesLoaded} 
+      <div className="relative h-screen">
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
           options={{
             particles: {
-              number: { value: 80 },
-              size: { value: 3 },
-              opacity: { value: 0.5 },
+              number: {
+                value: 30,
+                density: {
+                  enable: true,
+                  value_area: 800,
+                },
+              },
+              color: {
+                value: "#ffffff",
+              },
               shape: {
                 type: "circle",
+                stroke: {
+                  width: 0,
+                  color: "#000000",
+                },
+                polygon: {
+                  nb_sides: 5,
+                },
+              },
+              opacity: {
+                value: 0.5,
+                random: false,
+                anim: {
+                  enable: false,
+                  speed: 1,
+                  opacity_min: 0.1,
+                  sync: false,
+                },
+              },
+              size: {
+                value: 10,
+                random: true,
+                anim: {
+                  enable: false,
+                  speed: 40,
+                  size_min: 0.1,
+                  sync: false,
+                },
+              },
+              line_linked: {
+                enable: true,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 0.4,
+                width: 1,
               },
               move: {
                 enable: true,
-                speed: 3,
+                speed: 6,
+                direction: "none",
+                random: false,
+                straight: false,
+                out_mode: "out",
+                bounce: false,
+                attract: {
+                  enable: false,
+                  rotateX: 600,
+                  rotateY: 1200,
+                },
               },
             },
             interactivity: {
+              detect_on: "canvas",
               events: {
-                onHover: {
-                  enable: true,
-                  mode: "repulse",
-                },
                 onClick: {
                   enable: true,
                   mode: "push",
                 },
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                resize: true,
+              },
+              modes: {
+                grab: {
+                  distance: 400,
+                  line_linked: {
+                    opacity: 1,
+                  },
+                },
+                bubble: {
+                  distance: 400,
+                  size: 40,
+                  duration: 2,
+                  opacity: 8,
+                  speed: 3,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 0.4,
+                },
+                push: {
+                  particles_nb: 4,
+                },
+                remove: {
+                  particles_nb: 2,
+                },
               },
             },
+            retina_detect: true,
           }}
         />
-        <main className="p-8">
-          <h1 className="text-5xl font-bold text-white neon-glow mb-8">Welcome to My Portfolio</h1>
-          <ServicesSection />
-          <TestimonialsSection />
-          <SkillsSection />
-          <ResumeCard />
-          <Footer />
-        </main>
+        <div className="absolute inset-0 flex flex-col justify-center items-center">
+          <h1 className="text-5xl font-bold mb-4 text-white neon-glow">Welcome to My Portfolio</h1>
+          <p className="text-lg text-gray-300 mb-8">Explore my services, skills, and experience.</p>
+          <button
+            onClick={toggleDarkMode}
+            className="bg-cyan-500 text-white py-2 px-4 rounded transition-all duration-300 hover:bg-cyan-400"
+          >
+            Toggle Dark Mode
+          </button>
+        </div>
       </div>
+      <ServicesSection />
+      <TestimonialsSection />
+      <SkillsSection />
     </Container>
   );
 };
 
-export default App;
-
+export default MainPage;
