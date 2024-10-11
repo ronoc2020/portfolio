@@ -22,7 +22,7 @@ const ServiceCard = ({ title, url }: { title: string; url: string }) => (
   <div className="border rounded-lg shadow-lg p-6 mb-4 bg-opacity-50 backdrop-filter backdrop-blur-lg transition-shadow transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
     <Link href={url} className="block">
       <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="text-gray-600">Uzyskaj więcej informacji na temat {title} i jak możemy Ci pomóc.</p>
+      <p className="text-gray-600">Get more information about how I can help you with</p>
     </Link>
   </div>
 );
@@ -155,7 +155,7 @@ const Home = () => {
         <section className="mb-16 flex flex-col items-center text-center">
           <h1 className="text-5xl font-bold mb-4 glow-text animate-fadeIn">Welcome to RO-NOC</h1>
           <p className="text-lg mb-6 animate-fadeIn">Your trusted partner in IT solutions and consulting.</p>
-          <p className="text-md text-gray-300 mb-8 animate-fadeIn">With years of experience in delivering exceptional IT services, we help businesses thrive in a digital world.</p>
+          <p className="text-md text-gray-300 mb-8 animate-fadeIn">With years of experience in delivering exceptional IT services, I help businesses thrive in a digital world.</p>
         </section>
 
         {/* Error Handling */}
@@ -174,7 +174,7 @@ const Home = () => {
 
             {/* Services Section */}
             <section id="services" className="mb-16">
-              <h2 className="text-4xl font-bold mb-4 animate-fadeIn">Our Services</h2>
+              <h2 className="text-4xl font-bold mb-4 animate-fadeIn">My Services</h2>
               <ServicesSection />
             </section>
 
