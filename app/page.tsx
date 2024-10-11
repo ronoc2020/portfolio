@@ -196,31 +196,37 @@ const Page = () => {
   }, []);
 
   return (
-    <Container className="relative">
+    <div className="relative">
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
-          fullScreen: {
-            enable: true,
-            zIndex: 0,
+          background: {
+            color: {
+              value: "#000",
+            },
           },
           particles: {
             number: {
-              value: 50,
-              density: {
-                enable: true,
-                value_area: 800,
-              },
+              value: 100,
             },
-            color: {
-              value: "#ffffff",
+            size: {
+              value: { min: 1, max: 5 },
+            },
+            move: {
+              enable: true,
+              speed: 1,
+              direction: "none",
+              random: false,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
             },
             shape: {
               type: "circle",
               stroke: {
                 width: 0,
-                color: "#000000",
+                color: "#000",
               },
               polygon: {
                 nb_sides: 5,
@@ -241,112 +247,56 @@ const Page = () => {
                 sync: false,
               },
             },
-            size: {
-              value: 5,
-              random: true,
-              anim: {
-                enable: false,
-                speed: 40,
-                size_min: 0.1,
-                sync: false,
+            interactivity: {
+              events: {
+                onhover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                onclick: {
+                  enable: true,
+                  mode: "push",
+                },
+                resize: true,
               },
-            },
-            line_linked: {
-              enable: true,
-              distance: 150,
-              color: "#ffffff",
-              opacity: 0.4,
-              width: 1,
-            },
-            move: {
-              enable: true,
-              speed: 6,
-              direction: "none",
-              random: false,
-              straight: false,
-              out_mode: "out",
-              bounce: false,
-              attract: {
-                enable: false,
-                rotateX: 600,
-                rotateY: 1200,
-              },
-            },
-          },
-          interactivity: {
-            detect_on: "canvas",
-            events: {
-              onhover: {
-                enable: true,
-                mode: "repulse",
-              },
-              onclick: {
-                enable: true,
-                mode: "push",
-              },
-              resize: true,
-            },
-            modes: {
-              grab: {
-                distance: 400,
-                line_linked: {
-                  opacity: 1,
+              modes: {
+                grab: {
+                  distance: 400,
+                  line_linked: {
+                    opacity: 1,
+                  },
+                },
+                bubble: {
+                  distance: 400,
+                  size: 40,
+                  duration: 2,
+                  opacity: 8,
+                  speed: 3,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 2,
+                },
+                push: {
+                  particles_nb: 4,
+                },
+                remove: {
+                  particles_nb: 2,
                 },
               },
-              bubble: {
-                distance: 400,
-                size: 40,
-                duration: 2,
-                opacity: 8,
-                speed: 3,
-              },
-              repulse: {
-                distance: 200,
-                duration: 0.4,
-              },
-              push: {
-                particles_nb: 4,
-              },
-              remove: {
-                particles_nb: 2,
-              },
             },
           },
-          retina_detect: true,
         }}
       />
-      <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-10 flex flex-col items-center justify-center text-white text-center">
-        <h1 className="text-6xl font-bold mb-4 neon-glow">Welcome to My Portfolio</h1>
-        <h2 className="text-3xl mb-4">Your IT Solutions Partner</h2>
-        <div className="flex space-x-4">
-          <a href="https://github.com/ro-noc" target="_blank" rel="noopener noreferrer">
-            <Github className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
-          </a>
-          <a href="https://linkedin.com/in/ro-noc" target="_blank" rel="noopener noreferrer">
-            <Linkedin className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
-          </a>
-          <a href="https://twitter.com/ro_noc" target="_blank" rel="noopener noreferrer">
-            <Twitter className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
-          </a>
-          <a href="https://youtube.com/channel/UCXXXXXX" target="_blank" rel="noopener noreferrer">
-            <Youtube className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
-          </a>
-          <a href="https://twitch.tv/ro_noc" target="_blank" rel="noopener noreferrer">
-            <Twitch className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
-          </a>
-        </div>
-      </div>
-
-      <main className="relative z-20">
-        <div className="container mx-auto px-4 py-16">
-          <ResumeCard />
-          <ServicesSection />
-          <TestimonialsSection />
-          <SkillsSection />
-          <ContactForm />
-        </div>
-      </main>
-    </Container>
+      <Container>
+        <h1 className="text-5xl font-bold mb-8 text-white neon-glow">Welcome to My Portfolio</h1>
+        <ResumeCard />
+        <ServicesSection />
+        <TestimonialsSection />
+        <ContactForm />
+        <SkillsSection />
+      </Container>
+    </div>
   );
 };
 
