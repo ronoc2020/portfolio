@@ -37,49 +37,12 @@ const rssSources: FeedSource[] = [
   { source: "InfoSecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/", items: [] },
 ];
 
-const particleOptions = {
-  background: { color: { value: "transparent" } },
-  fpsLimit: 60,
-  interactivity: {
-    events: {
-      onClick: { enable: true, mode: "push" },
-      onHover: { enable: true, mode: "repulse" },
-      resize: true,
-    },
-    modes: {
-      push: { quantity: 4 },
-      repulse: { distance: 200, duration: 0.4 },
-    },
-  },
-  particles: {
-    color: { value: "#ffffff" },
-    links: {
-      color: "#ffffff",
-      distance: 150,
-      enable: true,
-      opacity: 0.5,
-      width: 1,
-    },
-    move: {
-      direction: "none",
-      enable: true,
-      outModes: { default: "bounce" },
-      speed: 6,
-    },
-    number: { density: { enable: true, area: 800 }, value: 80 },
-    opacity: { value: 0.5 },
-    shape: { type: "circle" },
-    size: { value: { min: 1, max: 5 } },
-  },
-  detectRetina: true,
-};
-
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
-  const [displayedFeedItems, setDisplayedFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const particlesInit = useCallback(async (engine: Engine) => {
@@ -105,7 +68,6 @@ export default function Home() {
       );
 
       setRssFeedItems(feeds);
-      setDisplayedFeedItems(feeds); // Initially display all feeds
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
       setError("Failed to fetch RSS feeds. Please try again later.");
@@ -122,40 +84,73 @@ export default function Home() {
       const response = await fetch("https://api.github.com/users/ronoc2020/repos");
       if (!response.ok) throw new Error("Failed to fetch repositories");
 
-      const data = await response.json();
-      const sortedRepos = data
-        .sort((a, b) => b.stargazers_count - a.stargazers_count)
-        .slice(0, 5);
-      setRepositories(sortedRepos);
+      const data: Repository[] = await response.json();
+      setRepositories(data);
+      setFilteredRepositories(data); // Set filtered repositories initially to all repositories
     } catch (error) {
       console.error("Error fetching repositories:", error);
-      setError("Failed to fetch GitHub repositories. Please try again later.");
+      setError("Failed to fetch repositories. Please try again later.");
     }
   };
 
+  // Handle Search
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const filtered = repositories.filter((repo) =>
+      repo.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRepositories(filtered);
+  };
+
+  // Fetch data on component mount
   useEffect(() => {
     fetchRssFeeds();
     fetchRepositories();
   }, []);
 
-  // Handle Search
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery) {
-      const filteredFeeds = rssFeedItems.map(feed => ({
-        ...feed,
-        items: feed.items.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase())),
-      })).filter(feed => feed.items.length > 0); // Only include feeds with items
-
-      setDisplayedFeedItems(filteredFeeds);
-    } else {
-      setDisplayedFeedItems(rssFeedItems); // Reset displayed items if query is empty
-    }
-  };
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black text-white">
-      <Particles id="tsparticles" init={particlesInit} options={particleOptions} />
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black">
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          background: { color: { value: "transparent" } },
+          fpsLimit: 120,
+          interactivity: {
+            events: {
+              onClick: { enable: true, mode: "push" },
+              onHover: { enable: true, mode: "repulse" },
+              resize: true,
+            },
+            modes: {
+              push: { quantity: 4 },
+              repulse: { distance: 200, duration: 0.4 },
+            },
+          },
+          particles: {
+            color: { value: "#ffffff" },
+            links: {
+              color: "#ffffff",
+              distance: 150,
+              enable: true,
+              opacity: 0.5,
+              width: 1,
+            },
+            move: {
+              direction: "none",
+              enable: true,
+              outModes: { default: "bounce" },
+              speed: 6,
+            },
+            number: { density: { enable: true, area: 800 }, value: 80 },
+            opacity: { value: 0.5 },
+            shape: { type: "circle" },
+            size: { value: { min: 1, max: 5 } },
+          },
+          detectRetina: true,
+        }}
+      />
+
       <Container>
         <nav className="flex justify-between items-center w-full mb-16">
           <div className="flex items-center">
@@ -163,130 +158,112 @@ export default function Home() {
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
           <div className="flex space-x-4">
-            {["services", "news", "search", "contact"].map((item) => (
-              <Link key={item} href={`#${item}`} className="hover-text">
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </Link>
-            ))}
+            <Link href="#" className="hover-text">Home</Link>
+            <Link href="#" className="hover-text">About</Link>
+            <Link href="#" className="hover-text">Services</Link>
+            <Link href="#" className="hover-text">Contact</Link>
           </div>
         </nav>
-        <section className="text-center mb-16" id="intro">
+
+        <section className="text-center mb-16">
           <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
           <p className="text-xl mb-8">Ensuring stability and security for your IT infrastructure.</p>
-          <a href="mailto:ronoc2020@gmail.com?subject=Report an Issue&body=Description of the issue...">
-            <Button className="report-issue-btn">Report Issue</Button>
-          </a>
+          <p className="text-2xl font-semibold">Tel: +48 695295641</p>
         </section>
-        <section className="text-center mb-16" id="profile">
-          <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
-          <p className="text-xl mb-4">Well-organized professional with over 15 years of IT experience, particularly in security and cloud management.</p>
-          <p className="text-lg mb-4">Strengths include:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Infrastructure Management</li>
-            <li>Cybersecurity</li>
-            <li>Project Leadership</li>
-          </ul>
-          <p className="text-lg mb-4">Key Highlights:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Senior Engineer at LTI MindTree Ltd, enhancing security measures.</li>
-            <li>Support Engineer at Intellias, managing cloud infrastructures.</li>
-          </ul>
-          <p className="text-lg mb-4">Educational Background & Technical Skills:</p>
-          <ul className="list-disc list-inside mb-8">
-            <li>Expertise in Azure and AWS.</li>
-            <li>Degree in Computer Science.</li>
-            <li>Proficient in various security frameworks.</li>
-          </ul>
-        </section>
-        <section className="text-center mb-16" id="services">
-          <h2 className="text-4xl font-bold mb-4">Our Services</h2>
-          <div className="flex flex-wrap justify-center gap-8">
-            <div className="service-card">
-              <h3 className="text-xl font-bold">Cloud Management</h3>
-              <p>Comprehensive cloud solutions for your business.</p>
+
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold mb-4">Our Services</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="hover-card">
+              <h4 className="text-xl font-semibold mb-2">IT Consulting</h4>
+              <p>Expert advice for your IT strategy and implementation.</p>
             </div>
-            <div className="service-card">
-              <h3 className="text-xl font-bold">Security Audits</h3>
-              <p>Thorough audits to ensure compliance and security.</p>
+            <div className="hover-card">
+              <h4 className="text-xl font-semibold mb-2">Cloud Solutions</h4>
+              <p>Seamless migration and management of cloud infrastructure.</p>
             </div>
-            <div className="service-card">
-              <h3 className="text-xl font-bold">Network Monitoring</h3>
-              <p>Continuous monitoring to prevent downtime.</p>
+            <div className="hover-card">
+              <h4 className="text-xl font-semibold mb-2">Network Management</h4>
+              <p>24/7 monitoring and maintenance of your network.</p>
+            </div>
+            <div className="hover-card">
+              <h4 className="text-xl font-semibold mb-2">Cybersecurity</h4>
+              <p>Advanced protection against cyber threats.</p>
             </div>
           </div>
         </section>
-        <section className="text-center mb-16" id="news">
-          <h2 className="text-4xl font-bold mb-4">Latest News</h2>
-          <form onSubmit={handleSearch} className="mb-4">
-            <Input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search news..."
-              className="mb-2"
-            />
-            <Button type="submit" className="ml-2">
-              <Search />
-            </Button>
-          </form>
+
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold mb-4">Latest Cybersecurity News</h3>
           {loading ? (
             <p>Loading news...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            displayedFeedItems.map(({ source, items }) => (
-              <div key={source}>
-                <h3 className="text-2xl font-bold mt-4">{source}</h3>
-                <ul className="list-disc list-inside mb-4">
-                  {items.map((item) => (
-                    <li key={item.link}>
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            <ul className="space-y-4">
+              {rssFeedItems.map((feed) => (
+                <div key={feed.source}>
+                  <h4 className="font-bold text-xl">{feed.source}</h4>
+                  {feed.items.map((item, index) => (
+                    <li key={index} className="hover-card">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
                         {item.title}
                       </a>
                     </li>
                   ))}
-                </ul>
-              </div>
-            ))
-          )}
-        </section>
-        <section className="text-center mb-16" id="github">
-          <h2 className="text-4xl font-bold mb-4">GitHub Repositories</h2>
-          {error ? (
-            <p className="text-red-500">{error}</p>
-          ) : (
-            <div className="flex flex-wrap justify-center gap-8">
-              {repositories.map((repo) => (
-                <div key={repo.id} className="repo-card">
-                  <h3 className="text-xl font-bold">{repo.name}</h3>
-                  <p>⭐ {repo.stargazers_count} Stars</p>
-                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                    View Repository
-                  </a>
                 </div>
               ))}
-            </div>
+            </ul>
           )}
         </section>
-        <footer className="text-center mt-16">
-          <p>Connect with us on social media:</p>
-          <div className="flex justify-center space-x-4">
-            <Link href="https://github.com/ronoc2020">
-              <Github className="hover:scale-110 transition-transform" />
+
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold mb-4">Search Our Repos</h3>
+          <form onSubmit={handleSearch} className="flex space-x-4">
+            <Input
+              type="text"
+              placeholder="Search repositories..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 flex items-center">
+              <Search className="mr-2" /> Search
+            </Button>
+          </form>
+          <ul className="space-y-4 mt-4">
+            {filteredRepositories.map((repo) => (
+              <li key={repo.id} className="hover-card">
+                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                  {repo.name} ({repo.stargazers_count} stars)
+                </a>
+              </li>
+            ))}
+            {filteredRepositories.length === 0 && searchQuery && (
+              <p>No repositories found for "{searchQuery}"</p>
+            )}
+          </ul>
+        </section>
+
+        <footer className="mt-16">
+          <div className="flex justify-center space-x-4 mb-4">
+            <Link href="#" aria-label="GitHub">
+              <Github className="h-6 w-6" />
             </Link>
-            <Link href="https://www.linkedin.com/in/ron-orlowski/">
-              <Linkedin className="hover:scale-110 transition-transform" />
+            <Link href="#" aria-label="LinkedIn">
+              <Linkedin className="h-6 w-6" />
             </Link>
-            <Link href="https://twitter.com/ronoc2020">
-              <Twitter className="hover:scale-110 transition-transform" />
+            <Link href="#" aria-label="YouTube">
+              <Youtube className="h-6 w-6" />
             </Link>
-            <Link href="https://www.twitch.tv/ronoc2020">
-              <Twitch className="hover:scale-110 transition-transform" />
+            <Link href="#" aria-label="Twitter">
+              <Twitter className="h-6 w-6" />
             </Link>
-            <Link href="https://www.youtube.com/c/RonOrlowski">
-              <Youtube className="hover:scale-110 transition-transform" />
+            <Link href="#" aria-label="Twitch">
+              <Twitch className="h-6 w-6" />
             </Link>
           </div>
+          <p>&copy; 2024 RO-NOC Solutions. All rights reserved.</p>
         </footer>
       </Container>
     </main>
