@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback, useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -49,12 +50,14 @@ export default function Home() {
     await loadFull(engine);
   }, []);
 
-  // Fetch RSS Feeds
-  const fetchRssFeeds = async () => {
+  // Fetch RSS Feeds and GitHub Repositories
+  const fetchData = async () => {
     const parser = new Parser();
     setError(null); // Reset error state
+    setLoading(true); // Set loading state
 
     try {
+      // Fetch RSS feeds
       const feeds = await Promise.all(
         rssSources.map(async ({ source, url }) => {
           const feed = await parser.parseURL(url);
@@ -66,21 +69,9 @@ export default function Home() {
           return { source, url, items };
         })
       );
-
       setRssFeedItems(feeds);
-    } catch (error) {
-      console.error("Error fetching RSS feeds:", error);
-      setError("Failed to fetch RSS feeds. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // Fetch GitHub Repositories
-  const fetchRepositories = async () => {
-    setError(null); // Reset error state
-
-    try {
+      // Fetch GitHub repositories
       const response = await fetch("https://api.github.com/users/ronoc2020/repos");
       if (!response.ok) throw new Error("Failed to fetch repositories");
 
@@ -88,8 +79,10 @@ export default function Home() {
       setRepositories(data);
       setFilteredRepositories(data); // Set filtered repositories initially to all repositories
     } catch (error) {
-      console.error("Error fetching repositories:", error);
-      setError("Failed to fetch repositories. Please try again later.");
+      console.error("Error fetching data:", error);
+      setError("Failed to fetch data. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,8 +97,7 @@ export default function Home() {
 
   // Fetch data on component mount
   useEffect(() => {
-    fetchRssFeeds();
-    fetchRepositories();
+    fetchData();
   }, []);
 
   return (
@@ -225,45 +217,37 @@ export default function Home() {
               placeholder="Search repositories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1"
+              className="flex-grow"
             />
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 flex items-center">
-              <Search className="mr-2" /> Search
+            <Button type="submit">
+              <Search />
             </Button>
           </form>
-          <ul className="space-y-4 mt-4">
-            {filteredRepositories.map((repo) => (
-              <li key={repo.id} className="hover-card">
-                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
-                  {repo.name} ({repo.stargazers_count} stars)
-                </a>
-              </li>
-            ))}
-            {filteredRepositories.length === 0 && searchQuery && (
-              <p>No repositories found for "{searchQuery}"</p>
-            )}
-          </ul>
+
+          {filteredRepositories.length > 0 ? (
+            <ul className="space-y-4 mt-4">
+              {filteredRepositories.map((repo) => (
+                <li key={repo.id} className="hover-card">
+                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                    {repo.name} ({repo.stargazers_count} ⭐)
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 mt-4">No repositories found.</p>
+          )}
         </section>
 
         <footer className="mt-16">
-          <div className="flex justify-center space-x-4 mb-4">
-            <Link href="#" aria-label="GitHub">
-              <Github className="h-6 w-6" />
-            </Link>
-            <Link href="#" aria-label="LinkedIn">
-              <Linkedin className="h-6 w-6" />
-            </Link>
-            <Link href="#" aria-label="YouTube">
-              <Youtube className="h-6 w-6" />
-            </Link>
-            <Link href="#" aria-label="Twitter">
-              <Twitter className="h-6 w-6" />
-            </Link>
-            <Link href="#" aria-label="Twitch">
-              <Twitch className="h-6 w-6" />
-            </Link>
+          <div className="flex justify-center space-x-4">
+            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><Twitter /></a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer"><Linkedin /></a>
+            <a href="https://www.twitch.tv/" target="_blank" rel="noopener noreferrer"><Twitch /></a>
+            <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><Youtube /></a>
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><Github /></a>
           </div>
-          <p>&copy; 2024 RO-NOC Solutions. All rights reserved.</p>
+          <p className="text-center text-gray-500 mt-4">© 2024 RO-NOC. All rights reserved.</p>
         </footer>
       </Container>
     </main>
