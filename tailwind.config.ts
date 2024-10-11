@@ -1,32 +1,40 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: 'class', // Enables dark mode toggling via classes
+  // Enable JIT mode by default for faster build times and on-demand class generation
+  mode: 'jit',
+  
+  // Enable dark mode with class toggling (e.g., <html class="dark">)
+  darkMode: 'class',
+  
+  // Specify the paths to all of your template files
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}', // Path to your page components
-    './components/**/*.{js,ts,jsx,tsx,mdx}', // Path to your reusable components
-    './app/**/*.{js,ts,jsx,tsx,mdx}', // Additional paths for any app directory
+    './pages/**/*.{js,ts,jsx,tsx,mdx}', // Next.js page components
+    './components/**/*.{js,ts,jsx,tsx,mdx}', // Reusable components
+    './app/**/*.{js,ts,jsx,tsx,mdx}', // New app directory structure if used
   ],
+  
   theme: {
+    // Customize the default theme
     extend: {
-      // Define custom colors
+      // Custom colors
       colors: {
-        primary: 'var(--primary-color)', // Custom primary color variable
-        secondary: 'var(--secondary-color)', // Custom secondary color variable
-        background: 'var(--background-color)', // Custom background color variable
-        // Additional custom colors can be added here
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
+        background: 'var(--background-color)',
+        // Add any additional custom colors here
       },
-      // Define custom fonts
+      // Custom fonts
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'], // Default sans font
-        heading: ['Montserrat', 'sans-serif'], // Font for headings
-        // Additional font families can be added here
+        sans: ['Roboto', 'sans-serif'],
+        heading: ['Montserrat', 'sans-serif'],
+        // Add additional custom font families here
       },
-      // Define custom animations
+      // Custom animations
       animation: {
-        glow: 'glow 2s ease-in-out infinite alternate', // Glow animation
+        glow: 'glow 2s ease-in-out infinite alternate',
       },
-      // Define keyframes for animations
+      // Keyframes for animations
       keyframes: {
         glow: {
           '0%': {
@@ -37,12 +45,23 @@ const config: Config = {
           },
         },
       },
+      // Breakpoints for responsive design
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
     },
   },
+  
   // Add plugins to extend Tailwind's functionality
   plugins: [
-    require('tailwindcss-animate'), // Tailwind CSS animate plugin
-    // Add any additional plugins as needed
+    require('@tailwindcss/forms'), // For better form styles
+    require('@tailwindcss/typography'), // For better typography styles
+    require('tailwindcss-animate'), // Custom animations
+    // Add any other plugins you may need here
   ],
 };
 
