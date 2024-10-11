@@ -23,7 +23,7 @@ const ServiceCard = ({ title }: { title: string }) => (
   <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
     <h3 className="text-lg font-semibold">{title}</h3>
     <p className="text-gray-600">Detailed description about {title}.</p>
-    <Link href="#" className="mt-4 bg-blue-500 text-white rounded px-4 py-2">Learn More</Link>
+    <Link href="#" className="mt-4 inline-block bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Learn More</Link>
   </div>
 );
 
@@ -83,13 +83,12 @@ const Home = () => {
     }
   };
 
-  // Effect for fetching repositories on mount
   useEffect(() => {
     fetchRepositories();
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black relative overflow-hidden">
+    <main className="flex min-h-screen flex-col items-center justify-between p-0 bg-gradient-to-br from-purple-900 to-black relative overflow-hidden">
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -133,44 +132,30 @@ const Home = () => {
       />
 
       <Container>
+        {/* Navigation */}
+        <nav className="flex justify-between items-center w-full mb-16 z-10 p-4 bg-black bg-opacity-50 rounded-lg">
+          <div className="flex items-center">
+            <Image
+              src="https://imgur.com/XzVeiIb.gif" // Replace with the actual GIF link
+              alt="RO-NOC Logo"
+              width={90}
+              height={90}
+            />
+            <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
+          </div>
+          <div className="flex space-x-4 relative">
+            {["Home", "About Me", "Services", "Contact", "Repositories", "FAQ"].map((item) => (
+              <Link key={item} href={`#${item.replace(/\s+/g, "").toLowerCase()}`} className="hover:text-gray-300 no-underline">{item}</Link>
+            ))}
+          </div>
+        </nav>
+
         {/* Hero Section */}
         <section className="mb-16 flex flex-col items-center text-center">
           <h1 className="text-5xl font-bold mb-4 glow-text">Welcome to RO-NOC</h1>
           <p className="text-lg mb-6">Your trusted partner in IT solutions and consulting.</p>
-          <Link href="#services" className="bg-blue-500 text-white rounded px-4 py-2">Explore Services</Link>
+          <Link href="#services" className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Explore Services</Link>
         </section>
-
-        {/* Navigation */}
-        <nav className="flex justify-between items-center w-full mb-16 z-10">
-          <div className="flex items-center">
-            <Image src="https://imgur.com/XzVeiIb" alt="RO-NOC Logo" width={90} height={90} />
-            <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
-          </div>
-          <div className="flex space-x-4 relative">
-            <Link href="#" className="hover:text-gray-300">Home</Link>
-            <Link href="#about" className="hover:text-gray-300">About Me</Link>
-            <div className="relative group">
-              <Link href="#services" className="hover:text-gray-300">Services</Link>
-              <div className="hidden group-hover:block absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-                <ul className="py-2">
-                  {[ // Dynamic Dropdown
-                    { name: "IT Solutions and Services", url: "https://sites.google.com/view/ro-noc/doradztwo-it" },
-                    { name: "Cloud Solutions Implementation", url: "https://sites.google.com/view/ro-noc/implementacja-rozwi%C4%85za%C5%84-chmurowych" },
-                    { name: "Network / Infrastructure Monitoring and Management", url: "https://sites.google.com/view/ro-noc/monitorowanie-i-zarz%C4%85dzanie-sieci%C4%85-infrastruktur%C4%85" },
-                    { name: "Cybersecurity", url: "https://sites.google.com/view/ro-noc/cyberbezpiecze%C5%84stwo" }
-                  ].map(({ name, url }) => (
-                    <li key={name}>
-                      <Link href={url} className="block px-4 py-2 text-gray-800 hover:bg-gray-200">{name}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <Link href="https://sites.google.com/view/ro-noc/kontakt" className="hover:text-gray-300">Contact</Link>
-            <Link href="#repositories" className="hover:text-gray-300">Repositories</Link>
-            <Link href="https://sites.google.com/view/ro-noc/faq" className="hover:text-gray-300">FAQ</Link>
-          </div>
-        </nav>
 
         {/* Error Handling */}
         {error && <div className="text-red-500 mb-4">{error}</div>}
@@ -195,10 +180,8 @@ const Home = () => {
             {/* About Me Section */}
             <section id="about" className="text-center mb-16">
               <h3 className="text-4xl font-bold mb-4">About Me</h3>
-              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity. I specialize in creating and implementing modern cloud solutions and securing IT infrastructure. Thanks to my knowledge and experience, I support companies in optimizing IT processes while ensuring the highest level of data security.</p>
-              <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
-                <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank">Read more about me</Link>
-              </button>
+              <p className="text-xl mb-4">I am an experienced IT engineer with many years of experience in the field of network management and cybersecurity...</p>
+              <Link href="https://sites.google.com/view/ro-noc/o-mnie" target="_blank" className="mt-4 bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors">Read more about me</Link>
             </section>
 
             {/* Repositories List Section */}
@@ -214,17 +197,14 @@ const Home = () => {
                       <div className="border rounded-lg shadow-lg p-6 bg-white hover:shadow-xl transition-shadow transform hover:-translate-y-1">
                         <h3 className="text-lg font-semibold">{repo.name}</h3>
                         <p className="text-gray-600">⭐ {repo.stargazers_count}</p>
-                        <div className="tooltip mt-4">
-                          <Link
-                            href={repo.html_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors block text-center"
-                          >
-                            View Repository
-                          </Link>
-                          <span className="tooltip-text">Go to repository on GitHub</span>
-                        </div>
+                        <Link
+                          href={repo.html_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-colors block text-center mt-4"
+                        >
+                          View Repository
+                        </Link>
                       </div>
                     </li>
                   ))}
@@ -235,14 +215,9 @@ const Home = () => {
             {/* Contact Section */}
             <section id="contact" className="mb-16">
               <h2 className="text-4xl font-bold mb-4">Report an Incident</h2>
-              <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
-                <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem?authuser=0" target="_blank">Report</Link>
-              </button>
+              <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem" target="_blank" className="mt-4 bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition-colors">Report</Link>
 
-              {/* Button to Report Issue */}
-              <Link href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem" className="mt-4 bg-red-500 text-white rounded px-4 py-2">Report Issue</Link>
-
-              <div className="flex justify-center space-x-4 mb-6">
+              <div className="flex justify-center space-x-4 mb-6 mt-4">
                 {[
                   { href: "https://github.com/ronoc2020", icon: <Github className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
                   { href: "https://www.linkedin.com/in/ro-noc-182714306/", icon: <Linkedin className="w-6 h-6 text-gray-600 hover:text-gray-800" /> },
@@ -276,7 +251,6 @@ const Home = () => {
           </div>
         </div>
       </footer>
-
     </main>
   );
 };
