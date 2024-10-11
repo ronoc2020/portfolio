@@ -28,7 +28,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ title }) => (
   <div className="border rounded-lg shadow-lg p-6 mb-4 bg-white hover:shadow-xl transition-shadow">
     <h3 className="text-lg font-semibold">{title}</h3>
     <p className="text-gray-600">Detailed description about {title}.</p>
-    <button className="mt-4 bg-blue-500 text-white rounded px-4 py-2">Learn More</button>
+    <Link href="#" className="mt-4 bg-blue-500 text-white rounded px-4 py-2">Learn More</Link>
   </div>
 );
 
