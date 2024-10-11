@@ -101,7 +101,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-br from-purple-900 to-black relative overflow-hidden">
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -133,29 +133,67 @@ export default function Home() {
               enable: true,
               outModes: { default: "bounce" },
               speed: 6,
+              straight: false,
             },
-            number: { density: { enable: true, area: 800 }, value: 80 },
+            number: { density: { enable: true, area: 800 }, value: 100 },
             opacity: { value: 0.5 },
-            shape: { type: "circle" },
-            size: { value: { min: 1, max: 5 } },
+            shape: {
+              type: ["circle", "square", "triangle"],
+            },
+            size: { value: { min: 1, max: 10 } },
+            rotate: {
+              random: true,
+              value: 0,
+            },
+            tilt: {
+              random: true,
+              value: 0,
+            },
           },
           detectRetina: true,
         }}
       />
 
       <Container>
-        <nav className="flex justify-between items-center w-full mb-16">
+        <nav className="flex justify-between items-center w-full mb-16 z-10">
           <div className="flex items-center">
-            <Image src="/logo.png" alt="RO-NOC Logo" width={50} height={50} />
+           <Image src="https://imgur.com/XzVeiIb" alt="RO-NOC Logo" width={90} height={90} 
+/>
             <h1 className="text-4xl font-bold ml-4 glow-text">RO-NOC</h1>
           </div>
           <div className="flex space-x-4">
-            <Link href="#" className="hover-text">Home</Link>
-            <Link href="#" className="hover-text">About</Link>
-            <Link href="#" className="hover-text">Services</Link>
-            <Link href="#" className="hover-text">Contact</Link>
+            <Link href="#" className="hover:text-gray-300">Home</Link>
+            <Link href="#about" className="hover:text-gray-300">About</Link>
+            <Link href="#services" className="hover:text-gray-300">Services</Link>
+            <Link href="#news" className="hover:text-gray-300">Cybersecurity News</Link>
+            <Link href="#search" className="hover:text-gray-300">Search</Link>
+            <Link href="#contact" className="hover:text-gray-300">Contact</Link>
+            <Link href="#repositories" className="hover:text-gray-300">Repositories</Link>
           </div>
         </nav>
+
+        {/* New Profile Section */}
+        <section className="text-center mb-16" id="profile">
+          <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
+          <p className="text-xl mb-4">Well-organized professional with over 15 years of IT experience, particularly in security and cloud management.</p>
+          <p className="text-lg mb-4">Strengths include:</p>
+          <ul className="list-disc list-inside mb-8">
+            <li>Infrastructure Management</li>
+            <li>Cybersecurity</li>
+            <li>Project Leadership</li>
+          </ul>
+        </section>
+
+        {/* About Me Section */}
+        <section id="about" className="text-center mb-16">
+          <h3 className="text-4xl font-bold mb-4">About Me</h3>
+          <p className="text-xl mb-4">
+            I am well-organized and showcase over 15 years of IT experience, particularly in security and cloud management.
+            My strengths lie in infrastructure, cybersecurity, and project leadership. Key highlights include my roles at
+            LTI MindTree Ltd as a Senior Engineer and Intellias as a Support Engineer, where I enhanced security measures
+            and managed cloud infrastructures.
+          </p>
+        </section>
 
         <section className="text-center mb-16">
           <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
@@ -163,55 +201,59 @@ export default function Home() {
           <p className="text-2xl font-semibold">Tel: +48 695295641</p>
         </section>
 
-        <section className="mb-16">
+        <section className="mb-16" id="services">
           <h3 className="text-3xl font-bold mb-4">Our Services</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="hover-card">
+            <div className="hover-card transition-transform transform hover:scale-105">
               <h4 className="text-xl font-semibold mb-2">IT Consulting</h4>
               <p>Expert advice for your IT strategy and implementation.</p>
             </div>
-            <div className="hover-card">
+            <div className="hover-card transition-transform transform hover:scale-105">
               <h4 className="text-xl font-semibold mb-2">Cloud Solutions</h4>
               <p>Seamless migration and management of cloud infrastructure.</p>
             </div>
-            <div className="hover-card">
+            <div className="hover-card transition-transform transform hover:scale-105">
               <h4 className="text-xl font-semibold mb-2">Network Management</h4>
               <p>24/7 monitoring and maintenance of your network.</p>
             </div>
-            <div className="hover-card">
-              <h4 className="text-xl font-semibold mb-2">Cybersecurity</h4>
-              <p>Advanced protection against cyber threats.</p>
+            <div className="hover-card transition-transform transform hover:scale-105">
+              <h4 className="text-xl font-semibold mb-2">Security Services</h4>
+              <p>Robust security measures to protect your data.</p>
             </div>
           </div>
         </section>
 
-        <section className="mb-16">
-          <h3 className="text-3xl font-bold mb-4">Latest Cybersecurity News</h3>
+        {/* Cybersecurity News Section */}
+        <section className="mb-16" id="news">
+          <h3 className="text-3xl font-bold mb-4">Cybersecurity News</h3>
           {loading ? (
             <p>Loading news...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p>{error}</p>
           ) : (
-            <ul className="space-y-4">
+            <div className="space-y-4">
               {rssFeedItems.map((feed) => (
-                <div key={feed.source}>
-                  <h4 className="font-bold text-xl">{feed.source}</h4>
-                  {feed.items.map((item, index) => (
-                    <li key={index} className="hover-card">
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
+                <div key={feed.source} className="bg-gray-800 p-4 rounded-lg shadow-md">
+                  <h4 className="text-lg font-semibold">{feed.source}</h4>
+                  <ul className="list-disc list-inside">
+                    {feed.items.map((item, index) => (
+                      <li key={index}>
+                        <a href={item.link} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+                          {item.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
-            </ul>
+            </div>
           )}
         </section>
 
-        <section className="mb-16">
-          <h3 className="text-3xl font-bold mb-4">Search Our Repos</h3>
-          <form onSubmit={handleSearch} className="flex space-x-4">
+        {/* Search Repositories Section */}
+        <section id="search" className="mb-16">
+          <h3 className="text-3xl font-bold mb-4">Search GitHub Repositories</h3>
+          <form onSubmit={handleSearch} className="flex mb-4">
             <Input
               type="text"
               placeholder="Search repositories..."
@@ -219,35 +261,26 @@ export default function Home() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-grow"
             />
-            <Button type="submit">
-              <Search />
-            </Button>
+            <Button type="submit" className="ml-2"><Search /></Button>
           </form>
-
           {filteredRepositories.length > 0 ? (
-            <ul className="space-y-4 mt-4">
+            <ul className="space-y-2">
               {filteredRepositories.map((repo) => (
-                <li key={repo.id} className="hover-card">
-                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
-                    {repo.name} ({repo.stargazers_count} ⭐)
+                <li key={repo.id}>
+                  <a href={repo.html_url} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+                    {repo.name} <span className="text-gray-400">({repo.stargazers_count} stars)</span>
                   </a>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 mt-4">No repositories found.</p>
+            <p>No repositories found.</p>
           )}
         </section>
 
-        <footer className="mt-16">
-          <div className="flex justify-center space-x-4">
-            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><Twitter /></a>
-            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer"><Linkedin /></a>
-            <a href="https://www.twitch.tv/" target="_blank" rel="noopener noreferrer"><Twitch /></a>
-            <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><Youtube /></a>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><Github /></a>
-          </div>
-          <p className="text-center text-gray-500 mt-4">© 2024 RO-NOC. All rights reserved.</p>
+        {/* Footer Section */}
+        <footer className="bg-gray-800 p-4 rounded-lg shadow-md text-center">
+          <p className="text-gray-400">© 2024 RO-NOC. All rights reserved.</p>
         </footer>
       </Container>
     </main>
