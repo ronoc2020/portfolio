@@ -77,6 +77,7 @@ const particleOptions = {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [rssFeedItems, setRssFeedItems] = useState<FeedSource[]>([]);
+  const [displayedFeedItems, setDisplayedFeedItems] = useState<FeedSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -104,6 +105,7 @@ export default function Home() {
       );
 
       setRssFeedItems(feeds);
+      setDisplayedFeedItems(feeds); // Initially display all feeds
     } catch (error) {
       console.error("Error fetching RSS feeds:", error);
       setError("Failed to fetch RSS feeds. Please try again later.");
@@ -137,11 +139,17 @@ export default function Home() {
   }, []);
 
   // Handle Search
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
-      console.log("Searching for:", searchQuery);
-      // Implement search logic here by filtering rssFeedItems based on searchQuery
+      const filteredFeeds = rssFeedItems.map(feed => ({
+        ...feed,
+        items: feed.items.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase())),
+      })).filter(feed => feed.items.length > 0); // Only include feeds with items
+
+      setDisplayedFeedItems(filteredFeeds);
+    } else {
+      setDisplayedFeedItems(rssFeedItems); // Reset displayed items if query is empty
     }
   };
 
@@ -226,7 +234,7 @@ export default function Home() {
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            rssFeedItems.map(({ source, items }) => (
+            displayedFeedItems.map(({ source, items }) => (
               <div key={source}>
                 <h3 className="text-2xl font-bold mt-4">{source}</h3>
                 <ul className="list-disc list-inside mb-4">
