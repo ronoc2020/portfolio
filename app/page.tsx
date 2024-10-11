@@ -1,174 +1,84 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap');
+{/* Profile Section */}
+<section className="text-center mb-16" id="profile">
+  <h2 className="text-4xl font-bold mb-4">Roman Orlowski</h2>
+  <p className="text-xl mb-4">
+    I am a well-organized professional with over 15 years of extensive IT experience, specializing in security and cloud management. My passion for technology drives me to continuously enhance my skills and stay updated with industry trends.
+  </p>
+  <p className="text-lg mb-4">Key strengths include:</p>
+  <ul className="list-disc list-inside mb-8">
+    <li>
+      <strong>Infrastructure Management:</strong> Expertise in designing, implementing, and optimizing IT infrastructures to meet organizational needs.
+    </li>
+    <li>
+      <strong>Cybersecurity:</strong> Proficient in developing and enforcing security protocols to protect sensitive data against cyber threats.
+    </li>
+    <li>
+      <strong>Project Leadership:</strong> Skilled in leading cross-functional teams to deliver complex IT projects on time and within budget, while fostering collaboration and innovation.
+    </li>
+  </ul>
+</section>
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+{/* About Me Section */}
+<section id="about" className="text-center mb-16">
+  <h3 className="text-4xl font-bold mb-4">About Me</h3>
+  <p className="text-xl mb-4">
+    With over 15 years of professional experience, I have honed my skills in various facets of IT, focusing particularly on security and cloud management. Throughout my career, I have demonstrated a strong ability to manage IT infrastructures effectively, ensuring security and reliability. 
+    <br />
+    <br />
+    My key achievements include:
+  </p>
+  <ul className="list-disc list-inside mb-8">
+    <li>
+      At <strong>LTI MindTree Ltd</strong>, as a Senior Engineer, I implemented advanced security measures that significantly reduced vulnerabilities and enhanced system integrity.
+    </li>
+    <li>
+      During my tenure at <strong>Intellias</strong> as a Support Engineer, I successfully managed cloud infrastructures, optimizing performance and cost-efficiency, while ensuring seamless service delivery.
+    </li>
+    <li>
+      I have a proven track record of collaborating with stakeholders to align IT strategies with business objectives, enabling organizations to achieve their goals efficiently.
+    </li>
+  </ul>
+</section>
 
-:root {
-  --primary-color: #8a2be2;
-  --secondary-color: #4b0082;
-  --accent-color: #a855f7;
-  --background-color: #1a0033;
-  --text-color: #ffffff;
-  --card-bg-color: rgba(138, 43, 226, 0.2);
-  --hover-card-shadow: rgba(138, 43, 226, 0.5);
-  --button-bg-color: #d10707;
-  --button-hover-bg-color: #a80707;
-}
+{/* IT Consulting and Services Section */}
+<section className="text-center mb-16">
+  <h2 className="text-5xl font-bold mb-4 animate-glow">IT Consulting and Services</h2>
+  <h2 className="text-5xl font-bold mb-4 animate-glow">24/7 Network Management</h2>
+  <p className="text-xl mb-8">
+    Ensuring stability and security for your IT infrastructure through continuous monitoring and proactive maintenance. Our dedicated team is always ready to tackle any challenges and provide exceptional service to meet your needs.
+  </p>
+  <p className="text-2xl font-semibold">Contact Us: +48 695295641</p>
+  
+  {/* Report Issue Button */}
+  <a 
+    href="https://sites.google.com/view/ro-noc/zg%C5%82o%C5%9B-problem" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="inline-block mt-4 bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded transition duration-300 ease-in-out hover:bg-red-700"
+  >
+    Report Issue
+  </a>
+</section>
 
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-  color: var(--primary-color);
-}
-
-a {
-  color: var(--accent-color);
-  text-decoration: none;
-  transition: color 0.3s ease-in-out;
-
-  &:hover {
-    color: var(--primary-color);
-  }
-}
-
-.glow-text {
-  text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
-}
-
-.hover-text {
-  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-
-  &:hover {
-    color: var(--accent-color);
-    text-shadow: 0 0 10px var(--accent-color);
-  }
-}
-
-.hover-section {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--hover-card-shadow);
-  }
-}
-
-.hover-card {
-  @apply bg-opacity-20 rounded-lg p-5;
-  background-color: var(--card-bg-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--hover-card-shadow);
-  }
-}
-
-.lightsaber {
-  position: fixed;
-  width: 4px;
-  height: 0;
-  background-color: #fff;
-  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
-  animation: lightsaber-glow 2s ease-in-out infinite alternate;
-}
-
-.lightsaber-1 {
-  top: 0;
-  left: 10%;
-  transform-origin: top;
-  animation: lightsaber-1 10s linear infinite;
-}
-
-.lightsaber-2 {
-  bottom: 0;
-  right: 10%;
-  transform-origin: bottom;
-  animation: lightsaber-2 12s linear infinite;
-}
-
-@keyframes lightsaber-glow {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-@keyframes lightsaber-1 {
-  0% { height: 0; transform: rotate(45deg); }
-  50% { height: 100vh; }
-  100% { height: 0; transform: rotate(405deg); }
-}
-
-@keyframes lightsaber-2 {
-  0% { height: 0; transform: rotate(-45deg); }
-  50% { height: 100vh; }
-  100% { height: 0; transform: rotate(-405deg); }
-}
-
-@media (max-width: 768px) {
-  nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  // Button styles
-  .report-issue-btn,
-  .submit-btn {
-    background-color: var(--button-bg-color);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-      background-color: var(--button-hover-bg-color);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  // Input field styles
-  input,
-  textarea {
-    color: black !important;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 4px;
-    width: 100%;
-    box-sizing: border-box;
-
-    &:focus {
-      outline: none;
-      border-color: var(--button-bg-color);
-      box-shadow: 0 0 5px var(--button-bg-color);
-    }
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-    color: var(--text-color);
-  }
-
-  nav a {
-    margin: 5px 0;
-    color: var(--text-color);
-    transition: color 0.3s ease-in-out;
-
-    &:hover {
-      color: var(--accent-color);
-    }
-  }
-}
+{/* Our Services Section */}
+<section className="mb-16" id="services">
+  <h3 className="text-3xl font-bold mb-4">Our Services</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="hover-card transition-transform transform hover:scale-105">
+      <h4 className="text-xl font-semibold mb-2">IT Consulting</h4>
+      <p>Providing expert advice to align your IT strategy with your business goals and ensuring smooth implementation.</p>
+    </div>
+    <div className="hover-card transition-transform transform hover:scale-105">
+      <h4 className="text-xl font-semibold mb-2">Cloud Solutions</h4>
+      <p>Facilitating seamless migration to the cloud and ongoing management of your cloud infrastructure for optimal performance.</p>
+    </div>
+    <div className="hover-card transition-transform transform hover:scale-105">
+      <h4 className="text-xl font-semibold mb-2">Network Management</h4>
+      <p>Offering 24/7 monitoring and maintenance services to ensure the reliability and security of your network.</p>
+    </div>
+    <div className="hover-card transition-transform transform hover:scale-105">
+      <h4 className="text-xl font-semibold mb-2">Security Services</h4>
+      <p>Implementing robust security measures and protocols to safeguard your data and mitigate risks.</p>
+    </div>
+  </div>
+</section>
