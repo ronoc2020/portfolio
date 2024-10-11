@@ -1,14 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap');
-
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
 
 :root {
+  --primary-color: #8a2be2;
   --primary-color: #8a2be2; /* Updated primary color for better visibility */
-  --secondary-color: #4b0082;
+--secondary-color: #4b0082;
+  --accent-color: #a855f7;
   --accent-color: #a855f7; /* Brighter accent color */
-  --background-color: #1a0033;
+--background-color: #1a0033;
+  --text-color: #ffffff;
+  --card-bg-color: rgba(138, 43, 226, 0.1);
+  --hover-card-shadow: rgba(138, 43, 226, 0.3);
   --text-color: #ffffff; /* Text remains white for contrast */
   --card-bg-color: rgba(138, 43, 226, 0.2); /* Increased opacity for better visibility */
   --hover-card-shadow: rgba(138, 43, 226, 0.5); /* Stronger hover shadow */
@@ -17,145 +18,42 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  margin: 0;
+@@ -59,7 +61,7 @@ a:hover {
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-  color: var(--primary-color);
-}
-
-a {
-  color: var(--accent-color);
-  text-decoration: none;
-  transition: color 0.3s ease-in-out;
-}
-
-a:hover {
-  color: var(--primary-color);
-}
-
-/* Glow text style */
-.glow-text {
-  text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
-}
-
-/* Hover text effect */
-.hover-text {
-  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-}
-
-.hover-text:hover {
-  color: var(--accent-color);
-  text-shadow: 0 0 10px var(--accent-color);
-}
-
-/* Hover section effect */
-.hover-section {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-section:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px var(--hover-card-shadow);
-}
-
-/* Card styles */
 .hover-card {
+  @apply bg-opacity-10 rounded-lg p-5;
   @apply bg-opacity-20 rounded-lg p-5; /* Increased opacity for better visibility */
-  background-color: var(--card-bg-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+background-color: var(--card-bg-color);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+@@ -116,51 +118,62 @@ a:hover {
 }
 
-.hover-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px var(--hover-card-shadow);
-}
+/* Global Variables */
+$scarlet-red: #d10707;
+$hover-scarlet: darken($scarlet-red, 10%);
+$input-text-color: black; // Ensure input text color remains consistent
 
-/* Lightsaber animation styles */
-.lightsaber {
-  position: fixed;
-  width: 4px;
-  height: 0;
-  background-color: #fff;
-  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
-  animation: lightsaber-glow 2s ease-in-out infinite alternate;
-}
+/* Global Button Styles */
+.report-issue-btn,
+.submit-btn {
+  background-color: $scarlet-red;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: $hover-scarlet;
+  $scarlet-red: #d10707;
+  $hover-scarlet: darken($scarlet-red, 10%);
+  $input-text-color: black; // Ensure input text color remains consistent
 
-.lightsaber-1 {
-  top: 0;
-  left: 10%;
-  transform-origin: top;
-  animation: lightsaber-1 10s linear infinite;
-}
-
-.lightsaber-2 {
-  bottom: 0;
-  right: 10%;
-  transform-origin: bottom;
-  animation: lightsaber-2 12s linear infinite;
-}
-
-@keyframes lightsaber-glow {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-@keyframes lightsaber-1 {
-  0% { height: 0; transform: rotate(45deg); }
-  50% { height: 100vh; }
-  100% { height: 0; transform: rotate(405deg); }
-}
-
-@keyframes lightsaber-2 {
-  0% { height: 0; transform: rotate(-45deg); }
-  50% { height: 100vh; }
-  100% { height: 0; transform: rotate(-405deg); }
-}
-
-/* Tooltip styles */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.tooltip .tooltip-text {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 5px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%; /* Position the tooltip above the text */
-  left: 50%; /* Center the tooltip */
-  margin-left: -60px; /* Offset for centering */
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Media query for responsiveness */
-@media (max-width: 768px) {
-  nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Button styles */
+  /* Global Button Styles */
   .report-issue-btn,
   .submit-btn {
-    background-color: var(--button-bg-color);
+    background-color: $scarlet-red;
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
@@ -163,16 +61,30 @@ a:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background-color: var(--button-hover-bg-color);
+      background-color: $hover-scarlet;
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
     }
-  }
+}
+}
 
-  /* Input field styling */
+/* Input Field Styling */
+input,
+textarea {
+  color: $input-text-color !important;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: $scarlet-red;
+  /* Input Field Styling */
   input,
   textarea {
-    color: var(--text-color);
+    color: $input-text-color !important;
     border: 1px solid #ccc;
     padding: 10px; /* Slightly increased padding for better touch targets */
     border-radius: 4px;
@@ -181,15 +93,24 @@ a:hover {
 
     &:focus {
       outline: none;
-      border-color: var(--button-bg-color); /* Use button color for focus */
-      box-shadow: 0 0 5px var(--button-bg-color); /* Added shadow for focus */
+      border-color: $scarlet-red; /* Use button color for focus */
+      box-shadow: 0 0 5px $scarlet-red; /* Added shadow for focus */
     }
-  }
+}
+}
 
+.form-group {
+  margin-bottom: 16px;
+}
   .form-group {
     margin-bottom: 16px;
   }
 
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
   label {
     font-weight: bold;
     margin-bottom: 8px;
@@ -197,13 +118,13 @@ a:hover {
     color: var(--text-color); /* Label color for contrast */
   }
 
-  nav a {
-    margin: 5px 0;
+nav a {
+margin: 5px 0;
     color: var(--text-color); /* Ensure nav links are visible */
     transition: color 0.3s ease-in-out;
   }
 
   nav a:hover {
     color: var(--accent-color); /* Change nav link color on hover */
-  }
+}
 }
