@@ -81,154 +81,273 @@ const ServicesSection = () => {
   );
 };
 
-// RSS Feeds Section
-const RssSection = () => {
-  const rssFeeds = [
-    { title: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews?format=xml" },
-    { title: "Dark Reading", url: "https://www.darkreading.com/rss/all.xml" },
-    { title: "Infosecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/" },
-    { title: "GitHub Repositories", url: "https://github.com/ronoc2020?tab=repositories" },
+// Testimonials Section
+const TestimonialsSection = () => {
+  const testimonials = [
+    {
+      name: "John Doe",
+      feedback: "An exceptional professional with a profound understanding of IT infrastructure and customer management."
+    },
+    {
+      name: "Jane Smith",
+      feedback: "Highly recommend! Their approach to cloud solutions is both innovative and effective."
+    },
+    {
+      name: "Mark Johnson",
+      feedback: "Great support and expertise in cybersecurity. Helped us secure our network effectively."
+    },
   ];
 
   return (
-    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl">
-      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">RSS Feeds</h2>
+    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl mb-8">
+      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">Testimonials</h2>
+      <div className="space-y-4">
+        {testimonials.map((testimonial, index) => (
+          <div key={index} className="border border-transparent rounded-lg shadow-lg p-4 bg-opacity-40 bg-black hover:bg-opacity-60 backdrop-filter backdrop-blur-2xl transition-all duration-300">
+            <p className="text-gray-300 italic">"{testimonial.feedback}"</p>
+            <p className="text-md font-semibold text-cyan-400 mt-2">- {testimonial.name}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// Contact Form Component
+const ContactForm = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log("Form submitted:", formData);
+  };
+
+  return (
+    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl mb-8">
+      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">Contact Me</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full p-2 bg-gray-800 text-white rounded-lg"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full p-2 bg-gray-800 text-white rounded-lg"
+          required
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={formData.message}
+          onChange={handleChange}
+          className="w-full p-2 bg-gray-800 text-white rounded-lg"
+          rows={4}
+          required
+        ></textarea>
+        <button type="submit" className="w-full p-2 bg-cyan-500 rounded-lg hover:bg-cyan-400 transition duration-200">
+          Send Message
+        </button>
+      </form>
+    </section>
+  );
+};
+
+// Skills Section
+const SkillsSection = () => {
+  const skills = [
+    "Cloud Solutions",
+    "Cybersecurity",
+    "Networking",
+    "Infrastructure Management",
+    "Customer Support",
+    "IT Strategy Planning",
+  ];
+
+  return (
+    <section className="p-8 bg-gradient-to-bl from-black to-gray-900 rounded-xl shadow-xl mb-8">
+      <h2 className="text-4xl font-bold mb-8 text-white neon-glow">Skills</h2>
       <ul className="list-disc list-inside text-gray-300">
-        {rssFeeds.map((feed, index) => (
-          <li key={index}>
-            <Link href={feed.url} className="text-cyan-400 hover:underline">{feed.title}</Link>
-          </li>
+        {skills.map((skill, index) => (
+          <li key={index}>{skill}</li>
         ))}
       </ul>
     </section>
   );
 };
 
-// Footer Component
-const Footer = () => {
-  return (
-    <footer className="bg-black bg-opacity-50 p-4 text-center text-gray-300 rounded-t-lg shadow-lg">
-      <p>&copy; {new Date().getFullYear()} Your Name. All Rights Reserved.</p>
-      <div className="flex justify-center space-x-4">
-        <Link href="https://github.com/ronoc2020" className="text-gray-400 hover:text-white">
-          <Github className="w-6 h-6" />
-        </Link>
-        <Link href="https://www.linkedin.com/in/ro-noc-182714306/" className="text-gray-400 hover:text-white">
-          <Linkedin className="w-6 h-6" />
-        </Link>
-        <Link href="https://www.youtube.com/@RO-NOC" className="text-gray-400 hover:text-white">
-          <Youtube className="w-6 h-6" />
-        </Link>
-        <Link href="https://www.twitch.tv/ro_noc2020" className="text-gray-400 hover:text-white">
-          <Twitch className="w-6 h-6" />
-        </Link>
-        <Link href="https://x.com/noc_ro" className="text-gray-400 hover:text-white">
-          <Twitter className="w-6 h-6" />
-        </Link>
-      </div>
-    </footer>
-  );
-};
-
-// Sidebar Component
-const Sidebar = () => {
-  return (
-    <aside className="w-60 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Quick Links</h2>
-      <ul className="space-y-2">
-        <li>
-          <Link href="/" className="hover:underline">Home</Link>
-        </li>
-        <li>
-          <Link href="https://sites.google.com/view/ro-noc/doradztwo-it" className="hover:underline">Services</Link>
-        </li>
-        <li>
-          <Link href="https://sites.google.com/view/ro-noc/curriculum-vitae" className="hover:underline">CV</Link>
-        </li>
-        <li>
-          <Link href="#rss" className="hover:underline">RSS Feeds</Link>
-        </li>
-      </ul>
-    </aside>
-  );
-};
-
 // Main Component
-const Home = () => {
+const Page = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-4 bg-gradient-to-br from-purple-800 to-black relative overflow-hidden">
+    <Container className="relative">
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: { color: { value: "transparent" }},
+          fullScreen: {
+            enable: true,
+            zIndex: 0,
+          },
           particles: {
-            number: { value: 50, density: { enable: true, value_area: 800 }},
-            size: { value: 3 },
-            move: { direction: "none", speed: 1, random: false, straight: false, out_mode: "out" },
-            opacity: { value: 0.5, anim: { enable: false }},
+            number: {
+              value: 50,
+              density: {
+                enable: true,
+                value_area: 800,
+              },
+            },
+            color: {
+              value: "#ffffff",
+            },
+            shape: {
+              type: "circle",
+              stroke: {
+                width: 0,
+                color: "#000000",
+              },
+              polygon: {
+                nb_sides: 5,
+              },
+              image: {
+                src: "img/github.svg",
+                width: 100,
+                height: 100,
+              },
+            },
+            opacity: {
+              value: 0.5,
+              random: false,
+              anim: {
+                enable: false,
+                speed: 1,
+                opacity_min: 0.1,
+                sync: false,
+              },
+            },
+            size: {
+              value: 5,
+              random: true,
+              anim: {
+                enable: false,
+                speed: 40,
+                size_min: 0.1,
+                sync: false,
+              },
+            },
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: "#ffffff",
+              opacity: 0.4,
+              width: 1,
+            },
+            move: {
+              enable: true,
+              speed: 6,
+              direction: "none",
+              random: false,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+              attract: {
+                enable: false,
+                rotateX: 600,
+                rotateY: 1200,
+              },
+            },
           },
           interactivity: {
+            detect_on: "canvas",
             events: {
-              onhover: { enable: true, mode: "repulse" },
-              onclick: { enable: true, mode: "push" },
+              onhover: {
+                enable: true,
+                mode: "repulse",
+              },
+              onclick: {
+                enable: true,
+                mode: "push",
+              },
               resize: true,
             },
             modes: {
-              grab: { distance: 400, line_linked: { opacity: 1 }},
-              bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
-              repulse: { distance: 200, duration: 0.4 },
-              push: { particles_nb: 4 },
-              remove: { particles_nb: 2 },
+              grab: {
+                distance: 400,
+                line_linked: {
+                  opacity: 1,
+                },
+              },
+              bubble: {
+                distance: 400,
+                size: 40,
+                duration: 2,
+                opacity: 8,
+                speed: 3,
+              },
+              repulse: {
+                distance: 200,
+                duration: 0.4,
+              },
+              push: {
+                particles_nb: 4,
+              },
+              remove: {
+                particles_nb: 2,
+              },
             },
           },
+          retina_detect: true,
         }}
       />
-
-      {/* Navbar */}
-      <nav className="flex justify-between items-center w-full p-4 bg-opacity-50 bg-black rounded-b-lg shadow-lg">
-        <div className="flex items-center">
-          <div className="w-24 h-24 border-4 border-white rounded-full overflow-hidden">
-            <Image src="https://imgur.com/XzVeiIb" alt="Logo" width={96} height={96} className="object-cover" />
-          </div>
-        </div>
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-10 flex flex-col items-center justify-center text-white text-center">
+        <h1 className="text-6xl font-bold mb-4 neon-glow">Welcome to My Portfolio</h1>
+        <h2 className="text-3xl mb-4">Your IT Solutions Partner</h2>
         <div className="flex space-x-4">
-          <Link href="https://x.com/noc_ro" className="text-gray-400 hover:text-white">
-            <Twitter className="w-8 h-8" />
-          </Link>
-          <Link href="https://www.linkedin.com/in/ro-noc-182714306/" className="text-gray-400 hover:text-white">
-            <Linkedin className="w-8 h-8" />
-          </Link>
-          <Link href="https://www.youtube.com/@RO-NOC" className="text-gray-400 hover:text-white">
-            <Youtube className="w-8 h-8" />
-          </Link>
-          <Link href="https://www.twitch.tv/ro_noc2020" className="text-gray-400 hover:text-white">
-            <Twitch className="w-8 h-8" />
-          </Link>
+          <a href="https://github.com/ro-noc" target="_blank" rel="noopener noreferrer">
+            <Github className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
+          </a>
+          <a href="https://linkedin.com/in/ro-noc" target="_blank" rel="noopener noreferrer">
+            <Linkedin className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
+          </a>
+          <a href="https://twitter.com/ro_noc" target="_blank" rel="noopener noreferrer">
+            <Twitter className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
+          </a>
+          <a href="https://youtube.com/channel/UCXXXXXX" target="_blank" rel="noopener noreferrer">
+            <Youtube className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
+          </a>
+          <a href="https://twitch.tv/ro_noc" target="_blank" rel="noopener noreferrer">
+            <Twitch className="h-8 w-8 text-white hover:text-gray-400 transition duration-200" />
+          </a>
         </div>
-      </nav>
-
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center">
-        <h2 className="text-6xl font-bold mb-4 text-white neon-glow">Welcome to My Portfolio</h2>
-        <p className="text-lg text-gray-300 mb-8">Explore my services and get to know me better!</p>
-
-        <ResumeCard />
-        <ServicesSection />
-        <RssSection />
       </div>
 
-      {/* Footer Component */}
-      <Footer />
-    </main>
+      <main className="relative z-20">
+        <div className="container mx-auto px-4 py-16">
+          <ResumeCard />
+          <ServicesSection />
+          <TestimonialsSection />
+          <SkillsSection />
+          <ContactForm />
+        </div>
+      </main>
+    </Container>
   );
 };
 
-export default Home;
+export default Page;
